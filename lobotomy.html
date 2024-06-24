@@ -1,0 +1,162 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Performing a lobotomy on LLMs</title>
+</head>
+<body>
+  <h1>Performing a lobotomy on Llama3 8B</h1>
+    
+    <p> * I wanted to see what happens when you: 1) swap 2 Transformer layers in an LLM.  In ResNets, it was proven thath you can do so without any penalty suggesting the transformations learned are "commutative". 2) when you delete a layer. How many layers can you delete until there is a meaningful degradation.  </p>
+    <p> ** 1) swapping layers:</p>
+    <p> *** 
+import os
+import torch
+
+import sys
+# Add the directory containing your module to the Python path
+sys.path.append(os.path.dirname('/home/francois/Code/llama3/llama/'))
+from model import Transformer
+
+
+# torch.distributed.init_process_group(backend='nccl', init_method='env://', rank = torch.cuda.device_count(), world_size = 1)
+os.environ['MASTER_ADDR'] = 'localhost'
+os.environ['MASTER_PORT'] = '12345'
+# os.environ["CUDA_VISIBLE_DEVICES"] = "0,1,2,3"
+torch.distributed.init_process_group(backend='gloo', rank=0, world_size=1)
+max_seq_len = 2048
+base_model_repos = "/home/francois/Code/model_checkpoints"
+
+
+from typing import List, Optional
+import torch
+from llama import Llama
+
+def load_llama_model(ckpt_dir: str, tokenizer_path: str, max_seq_len: int = 512, max_batch_size: int = 4, device: int = 0, model_parallel_size: int = 1):
+    """
+    Loads the Llama model and tokenizer from the specified directory.
+    Ensures that it runs on the specified GPU device.
+    """
+    # Set the GPU device
+    torch.cuda.set_device(device)
+    
+    # Initialize the Llama model
+    generator = Llama.build(
+        ckpt_dir=ckpt_dir,
+        tokenizer_path=tokenizer_path,
+        max_seq_len=max_seq_len,
+        max_batch_size=max_batch_size,
+        model_parallel_size=model_parallel_size  # Set model_parallel_size to match the number of checkpoint files
+    )
+    # Move model to the specified GPU device
+    generator.model.to(f'cuda:{device}')
+    return generator
+
+def generate_response(generator, system_prompt: str, user_prompt: str, device: int, temperature: float = 0.6, top_p: float = 0.9, max_gen_len: Optional[int] = 128):
+    """
+    Generates a response from the system and user prompts using the Llama model.
+    """
+    
+    # Set the GPU device
+    torch.cuda.set_device(device)
+    
+    dialog = [
+        {"role": "system", "content": system_prompt},
+        {"role": "user", "content": user_prompt}
+    ]
+    results = generator.chat_completion(
+        [dialog],
+        max_gen_len=max_gen_len,
+        temperature=temperature,
+        top_p=top_p,
+    )
+    
+    # Extract and return the response content
+    return results[0]['generation']['content']
+
+# Set the paths for the model and tokenizer
+ckpt_dir = "/home/francois/Code/llama3/Meta-Llama-3-8B-Instruct/"
+tokenizer_path = "/home/francois/Code/llama3/Meta-Llama-3-8B-Instruct/tokenizer.model"
+
+# Load the models for both generators
+print("Loading right_brain_generator on GPU 1")
+model = load_llama_model(ckpt_dir, tokenizer_path, max_seq_len=max_seq_len, device=1, model_parallel_size=1)
+
+# prompt it to say something.... 
+# Example system and user prompts
+user_prompt = "User: Natalia sold clips to 48 of her friends in April, and then she sold half as many clips in May. How many clips did Natalia sell altogether in April and May?"
+system_prompt = "System: You are a mathematician. Your job is to think logically and solve problems. Show your thinking process via a Chain-of-Thought process."
+
+# Generate and print responses from both generators
+print("Generating response ")
+generated_text = generate_response(model, system_prompt, user_prompt, max_gen_len=1024, device=1)
+
+print("Response:")
+print(generated_text)
+
+
+    </p>
+    <p> *** 
+      Generating response 
+Response:
+Let's break this down step by step.
+
+**Step 1: Understand the problem**
+Natalia sold clips to 48 friends in April. Then, she sold half as many clips in May. We need to find the total number of clips she sold in April and May.
+
+**Step 2: Calculate the number of clips sold in May**
+If Natalia sold half as many clips in May as she did in April, that means she sold:
+
+48 (clips sold in April) / 2 = 24 clips in May
+
+**Step 3: Add the number of clips sold in April and May**
+To find the total number of clips sold, we add the number of clips sold in April and May:
+
+48 (clips sold in April) + 24 (clips sold in May) = 72
+
+**Conclusion**
+Natalia sold a total of 72 clips in April and May.
+    </p>
+    <p> *** </p>
+    <p> *** </p>
+    <p> ** 2) deleting layers:</p>
+    <p> *** 
+    # CREATE THE SUBSET MODEL 
+
+import torch.nn as nn
+
+# Define the range of layers to drop
+drop_layers_range_ = range(3, 29)
+
+# Create a new ModuleList for layers we want to keep
+new_layers = nn.ModuleList()
+
+# Iterate through the layers and keep only the ones not in the drop range
+for i, layer in enumerate(model.model.layers):
+    if i not in drop_layers_range_:
+        print("-" * 50)
+        print(f"Keeping layer {i}")
+        new_layers.append(layer)
+    else:
+        print("-" * 50)
+        print(f"Deleting layer {i}")
+
+# Assign the filtered ModuleList back to model.model.layers
+model.model.layers = new_layers
+
+# Print the layers after dropping the unwanted ones
+for i, layer in enumerate(model.model.layers):
+    print("-" * 50)
+    print(f"Layer {i}")
+    print(layer)
+
+    </p>
+    <p> *** </p>
+    <p> *** </p>
+    <p> *** </p>
+  
+  <h3>  Return <a href = "./index.html">Home</a> </h3> 
+</body>
+</html>
