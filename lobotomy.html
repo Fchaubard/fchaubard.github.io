@@ -116,7 +116,8 @@ print(generated_text)
 
 
     </code></pre>
-    <p> *** 
+  <pre><code>
+      *** 
       Generating response 
 Response:
 Let's break this down step by step.
@@ -136,12 +137,39 @@ To find the total number of clips sold, we add the number of clips sold in April
 
 **Conclusion**
 Natalia sold a total of 72 clips in April and May.
-    </p>
-    <p> *** </p>
-    <p> *** </p>
-    <p> ** 2) deleting layers:</p>
-    <p> *** 
-    # CREATE THE SUBSET MODEL 
+    </code></pre>
+  <pre><code> 
+# randomly permute n layers
+import copy
+import random
+n = 1
+for i in range(n):
+    i = random.randint(0,len(model.model.layers)-1)
+    j = random.randint(0,len(model.model.layers)-1)
+    temp = copy.deepcopy(model.model.layers[i])
+    model.model.layers[i] = model.model.layers[j]
+    model.model.layers[j] = temp
+    print(f"i={i}, j={j}")
+
+  </code></pre>
+  <pre><code>
+      print out responses of swapping here for different (n)s. 
+    </code></pre>
+      <pre><code>
+    ## For n = 3:
+    Generating response 
+Response:
+ (  ( ... ( / ( [ / error and ( option ( / response // ( /fontsous  , ( / topic element + node element componentannest appendix clusterns /resource ( sector sector component [ ( Senate element ‘ sector sector componentunder sector sector - ( ( ( [ sectorerst Atlas source (  ( s sen HT sector ( ,ss -pi sector ,st sector Terminal elements / sensor W sectorer sector ( ,p sectorerc  Terminal [sembl/under (pent version ( Y involved - “ sector -underer W sector (pW sector   sensor  W (son ,ss ster [pi inW sector11ss E component24ss (pi, ,s …
+ (p active Eson sector ( [supssW W (pison ( Met E  WSS (p “sp W Met , ( Y-w W …W Tank ( Met Hourss (ss ( Met BranchssW semantic Eson [ss (son,sterT …ss in ech Y  The Wsssssssss operative Eso W …Wson  Mer project  open_w  Wssssssss semanticpid “ The ssssssss semanticpUnsssssssss semantic- ererssssssssss Sem- project  Sem Met semantic- - — B component-ssssssssssss Semsssssssssssssssp  F
+sssssssssssssssssssssss Euras-Wsssssssp MrTssssssssss Wood
+sssssss Tre' Mrspsssssssssssssssssssssssssp  Ter Ms Mrsssssssssssssssssssss  Thed_ Mrsssssssssssssssssssssssssssssssssssssssssssssssssssssss Hol’11- the Mrsssssssssssssssspeter The Mrssssssssssssss Platform essence [sssssssssssssss
+sssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss SE  F Mrsssssssssssss SE  F Treeemet Full Inter S thet -t Mrsssssssssssssssssp Mrsss SW  Writing Holend SS wasEmung Mrssssssssssssssssssss'el  Ftw'ssssssssssssssssssss AB Mrssss Shelf Mrsssssssssssssssssssssssssssss- ' A Mrsssssssssssss' North Ewssssssssssssssssssssssssssssssssssssssssspendsssswssssss' Chw Thet Mrsssssssssssssssss Bw ' The Met Norths The ' Thesssssssssssssssssssssssssss SE ' Th  H Mrsssssssssssssssss Platform  Mssss AB  SS E An Mrssss AB T Mrssssss-B Mrwn N Thetg West 'ssssssss Ww Mrw ABend Thet Mrssw (pissss
+t ' Bel Mrw SISSssssmsswef S To  T Thew Norths  A The Mrsss Thet S El  Fw ST Thet  Mrss'ss  E-  D ' Mrsssssssss  T " L Mrssss Thewt ABt  T 'tssssssss - Jan Thew Norths T 'tsssssssssss AB Mrsss - ' ' AB 'tsssssss AB 'tssssss ' B Mrsssssssss ' To  ''er Mrspw F ' ' Ws 'sss
+     </code></pre>
+    <h2> ** 2) deleting layers:</h2>
+  <pre><code>
+  
+# CREATE THE SUBSET MODEL 
 
 import torch.nn as nn
 
@@ -170,7 +198,17 @@ for i, layer in enumerate(model.model.layers):
     print(f"Layer {i}")
     print(layer)
 
-    </p>
+    </code></pre>
+  <pre><code>
+      Insert the lobotomy response here. 
+          </code></pre>
+  <pre><code>
+          </code></pre>
+  <pre><code>
+          </code></pre>
+  <pre><code>
+          </code></pre>
+  <pre><code>
     <p> *** </p>
     <p> *** </p>
     <p> *** </p>
