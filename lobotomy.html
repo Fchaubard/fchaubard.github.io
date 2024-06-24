@@ -27,7 +27,8 @@
   <h1>Performing a lobotomy on Llama3 8B</h1>
     
     <p> * I wanted to see what happens when you: 1) swap 2 Transformer layers in an LLM.  In ResNets, it was proven thath you can do so without any penalty suggesting the transformations learned are "commutative". 2) when you delete a layer. How many layers can you delete until there is a meaningful degradation.  </p>
-    <p> ** 1) swapping layers:</p>
+    <p> TLDR: You can swap 2 layers and it will be a little bit degraded.. you can delete 1 layer and it will be a little bit degraded.. but if you swap more than 2 layers or delete more than 2 layers.. you are screwed! </p>
+    <h2> ** 1) swapping layers:</h2>
   <pre><code>
 
 import os
