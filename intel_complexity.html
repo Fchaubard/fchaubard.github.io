@@ -42,26 +42,26 @@
 </head>
 <body>
     <header>
-        <h1>Intelligence complexity is not model complexity, must include training dynamics and data as well.</h1>
+        <h1>Intelligence complexity is not model complexity, must include the solver, and data as well.</h1>
         <p><em>By Francois Chaubard</em></p>
     </header>
 
     <section>
         <p>
             For decades, computer scientists and mathematicians have tried to classify the complexity of algorithms and models—often in “big-O” notation similar to P, NP, PSPACE, etc. under the assumption that the <b>model itself</b> is the core entity we need to analyze. 
-            But when it comes to <em>intelligence</em>, focusing on the model in isolation overlooks critical factors like the training process and data distribution. For example, curriculum learning can greatly improve without curriculum. More trainnig steps outperforms less steps. All with the same model class. Using model alone is not useful as even a 2 layer NN can fit ANY function. So why in practice can't it? Because its not possible to find the magical theta that gets you there. So training dynamics must be taking into consideration for us to have a useful bound on intelligence to start defining intelligence classes. 
-            This post proposes a new perspective: an agent’s <em>intelligence</em> depends on the <em>synergy</em> of three components—model (architecture + capacity), training data (or experience more broadly), and training dynamics (SGD, MeZO, adam, lr schedule, weight decay, # of iters, etc etc).
+            But when it comes to <em>intelligence</em>, focusing on the model in isolation overlooks critical factors like the training process (the solver), and data distribution. For example, curriculum learning can greatly improve without curriculum. More trainnig steps outperforms less steps. All with the same model class. Using model alone is not useful as even a 2 layer NN can fit ANY function. So why in practice can't it? Because its not possible to find the magical theta that gets you there. So the solver / training dynamics must be taking into consideration for us to have a useful bound on intelligence to start defining intelligence classes. 
+            This post proposes a new perspective: an agent’s <em>intelligence</em> depends on the <em>synergy</em> of three components—model (architecture + capacity), training data (or experience more broadly), and the solver (all the training dynamics like: SGD, MeZO, adam, lr schedule, weight decay, # of iters, etc etc).
         </p>
 
         <p>
             We might call this integrated measure:
         </p>
         <pre>
-O<sub>Intelligence</sub>(model + training configs + data)
+O<sub>Intelligence</sub>(model + solver + data)
         </pre>
 
         <p>
-            where each part plays a role analogous to how, in Einstein’s theory of relativity, <em>matter</em> and <em>space-time</em> cannot be treated as independent. In the same way, the training regime, data, and model architecture are tightly interwoven and shape each other.
+            where each part plays a role analogous to how, in Einstein’s theory of relativity, <em>matter</em> and <em>space-time</em> cannot be treated as independent. In the same way, the solver, data, and model architecture are tightly interwoven and shape each other.
         </p>
     </section>
 
@@ -71,7 +71,7 @@ O<sub>Intelligence</sub>(model + training configs + data)
             In the machine learning world, we often talk about model complexity—like the number of parameters in a neural network, or the depth/width of layers—as if <em>that alone</em> determines learning capacity. The classic big-O notation helps us discuss computational or memory costs of <em>running</em> or <em>training</em> the model, but it rarely captures the model’s actual ability to <em>generalize</em>.
         </p>
         <p>
-            <strong>Key takeaway:</strong> Looking at <em>any one</em> of these three (model, data, or training) without the others is akin to analyzing a planet’s motion in purely Newtonian terms, ignoring the fact that mass and spacetime curvature are intertwined in Einstein’s relativity.
+            <strong>Key takeaway:</strong> Looking at <em>any one</em> of these three (model, data, or solver) without the others is akin to analyzing a planet’s motion in purely Newtonian terms, ignoring the fact that mass and spacetime curvature are intertwined in Einstein’s relativity.
         </p>
     </section>
 
