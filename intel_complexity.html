@@ -1,9 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
+    
+    
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rethinking Intelligence Complexity</title>
+    <title>Intelligence complexity is not model complexity, must include training dynamics and data as well.</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -39,15 +42,15 @@
 </head>
 <body>
     <header>
-        <h1>Rethinking Intelligence Complexity: Why Model + Training + Data Are Inseparable</h1>
-        <p><em>By [Your Name]</em></p>
+        <h1>Intelligence complexity is not model complexity, must include training dynamics and data as well.</h1>
+        <p><em>By Francois Chaubard</em></p>
     </header>
 
     <section>
         <p>
-            For decades, computer scientists and mathematicians have tried to classify the complexity of algorithms and models—often in “big-O” notation—under the assumption that the model itself is the core entity we need to analyze. 
-            But when it comes to <em>intelligence</em>, focusing on the model in isolation overlooks critical factors like the training process and data distribution. 
-            This post proposes a new perspective: an agent’s <em>intelligence</em> depends on the <em>synergy</em> of three components—model (architecture + capacity), data (or environments), and training (or adaptation) process.
+            For decades, computer scientists and mathematicians have tried to classify the complexity of algorithms and models—often in “big-O” notation similar to P, NP, PSPACE, etc. under the assumption that the <b>model itself</b> is the core entity we need to analyze. 
+            But when it comes to <em>intelligence</em>, focusing on the model in isolation overlooks critical factors like the training process and data distribution. For example, curriculum learning can greatly improve without curriculum. More trainnig steps outperforms less steps. All with the same model class. Using model alone is not useful as even a 2 layer NN can fit ANY function. So why in practice can't it? Because its not possible to find the magical theta that gets you there. So training dynamics must be taking into consideration for us to have a useful bound on intelligence to start defining intelligence classes. 
+            This post proposes a new perspective: an agent’s <em>intelligence</em> depends on the <em>synergy</em> of three components—model (architecture + capacity), training data (or experience more broadly), and training dynamics (SGD, MeZO, adam, lr schedule, weight decay, # of iters, etc etc).
         </p>
 
         <p>
