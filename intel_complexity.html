@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rethinking Intelligence Complexity</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0 20px;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        h1, h2, h3 {
+            color: #0056b3;
+        }
+        a {
+            color: #0056b3;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        code {
+            background-color: #f4f4f4;
+            padding: 2px 4px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        pre {
+            background-color: #f4f4f4;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Rethinking Intelligence Complexity: Why Model + Training + Data Are Inseparable</h1>
+        <p><em>By [Your Name]</em></p>
+    </header>
+
+    <section>
+        <p>
+            For decades, computer scientists and mathematicians have tried to classify the complexity of algorithms and models—often in “big-O” notation—under the assumption that the model itself is the core entity we need to analyze. 
+            But when it comes to <em>intelligence</em>, focusing on the model in isolation overlooks critical factors like the training process and data distribution. 
+            This post proposes a new perspective: an agent’s <em>intelligence</em> depends on the <em>synergy</em> of three components—model (architecture + capacity), data (or environments), and training (or adaptation) process.
+        </p>
+
+        <p>
+            We might call this integrated measure:
+        </p>
+        <pre>
+O<sub>Intelligence</sub>(model + training configs + data)
+        </pre>
+
+        <p>
+            where each part plays a role analogous to how, in Einstein’s theory of relativity, <em>matter</em> and <em>space-time</em> cannot be treated as independent. In the same way, the training regime, data, and model architecture are tightly interwoven and shape each other.
+        </p>
+    </section>
+
+    <section>
+        <h2>1. The Pitfall of Looking at Models in Isolation</h2>
+        <p>
+            In the machine learning world, we often talk about model complexity—like the number of parameters in a neural network, or the depth/width of layers—as if <em>that alone</em> determines learning capacity. The classic big-O notation helps us discuss computational or memory costs of <em>running</em> or <em>training</em> the model, but it rarely captures the model’s actual ability to <em>generalize</em>.
+        </p>
+        <p>
+            <strong>Key takeaway:</strong> Looking at <em>any one</em> of these three (model, data, or training) without the others is akin to analyzing a planet’s motion in purely Newtonian terms, ignoring the fact that mass and spacetime curvature are intertwined in Einstein’s relativity.
+        </p>
+    </section>
+
+    <section>
+        <h2>2. Intelligence as “Performance Over Tasks”</h2>
+        <h3>2.1 A More General Definition</h3>
+        <p>
+            One way to define <em>intelligence</em> is in terms of <em>average performance</em> on a <em>broad set</em> of tasks. This echoes ideas from the Legg-Hutter measure of universal intelligence, which looks at how an agent performs across all computable environments. 
+        </p>
+        <h3>2.2 Why the Holistic View Matters</h3>
+        <p>
+            If we let <code>&#x1D54C;</code> represent a set of tasks and <code>Perf(agent, &#x1D54C;)</code> represent the agent’s average performance on these tasks, then a <em>rough</em> measure of intelligence might be:
+        </p>
+        <pre>
+Intelligence(agent) ≈ 𝔼<sub>t∈&#x1D54C;</sub>[Perf(agent, t)]
+        </pre>
+    </section>
+
+    <section>
+        <h2>3. The Analogy: Newton vs. Einstein</h2>
+        <h3>3.1 Matter and Spacetime</h3>
+        <p>
+            In Newtonian mechanics, we often see space and time as fixed backgrounds and treat objects (matter) as separate. Einstein’s theory of general relativity flips that picture: <em>matter-energy</em> warps <em>spacetime</em>, and <em>spacetime curvature</em> affects how matter moves. They are intertwined, not independent.
+        </p>
+    </section>
+
+    <section>
+        <h2>4. From Big-O to “Holistic” Complexity</h2>
+        <h3>4.1 Classical Big-O in Machine Learning</h3>
+        <p>
+            Classical big-O typically gives you something like:
+        </p>
+        <ul>
+            <li><strong>Training Complexity:</strong> <code>O(N × model cost)</code> for <code>N</code> training samples.</li>
+            <li><strong>Inference Complexity:</strong> <code>O(d × model cost)</code> for <code>d</code> input features.</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>5. Potential Objections &amp; Discussion</h2>
+        <p><strong>1. Isn’t This Just Legg-Hutter or Universal Intelligence?</strong></p>
+        <p>Similar spirit, different emphasis.</p>
+        <p><strong>2. Measuring “All Possible Tasks” is Impossible</strong></p>
+        <p>Indeed, we can’t measure literally <em>everything</em>.</p>
+    </section>
+
+<h3>  Return <a href = "./index.html">Home</a> </h3> 
+</body>
+</html>
