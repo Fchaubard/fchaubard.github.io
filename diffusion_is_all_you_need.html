@@ -34,22 +34,11 @@
     
     <p>I really hate that term but I can't think of a better header. When I talk to everyone who has tried diffusion training for their problem every says the same thing.. "it just works". Like no HPP tuning. That is nuts! The other vibe check is diffusion itself is very easy to see how the brain could be doing it. Diffusion is literally one of the most basic processes in physics. Its seen everywhere. And in the brain it obviously appears as well. You have path one which is a "clean" path and then you have a "dirty path" which is any other circuit that has a few more neurons in the way and then you just want to get the dirty path to match the clean. To "denoise" the clean. Thats it. I dont pretend to be a neuroscientist but it seems obvious. </p>
     
-    <h2>Diffusion as a General-Purpose Training Method</h2>
+    <h2>Diffusion is one of the most Data Efficient training procedures</h2>
+    <p>As proven in the Diffusion Policy paper, with just 50-100 examples per task, the model is able to generalize. That is crazy if you compare to any other training procedure.</p>
     
-    <p>Diffusion models are not just for generative tasks; they can be adapted for unsupervised, supervised, and reinforcement learning (RL). Here’s a breakdown:</p>
-    
-    <h3>Unsupervised Learning</h3>
-    <p>Diffusion models inherently learn data distributions by denoising. This makes them incredibly effective for unsupervised learning tasks like density estimation and self-supervised representation learning.</p>
-    
-    <h3>Supervised Learning</h3>
-    <p>By conditioning the reverse diffusion process on labels, diffusion models can be adapted to perform supervised classification or regression.</p>
-    
-    <h3>Reinforcement Learning</h3>
-    <p>Diffusion-based policies, such as in Diffusion Policy, learn to generate optimal action sequences by modeling the underlying policy as a distribution over possible actions. This improves multimodal decision-making and stability.</p>
-    
-    <h2>Pseudo Code for Diffusion-Based Learning</h2>
+    <h2>Diffusion-Based Learning is perhaps the simplest General-Purpose Training Method</h2>
     <p> The last argument I will make is occam's razor. Diffusion is so so so simple! Just look at this. It could be used for supervised learning, unsupervised learning, RL, etc. And it always "just works"! </p>
-    
     
     <pre>
     def diffusion_train(data, num_timesteps):
@@ -66,6 +55,17 @@
             y_hat = model.denoise_step(y_hat, t)
         return y_hat
     </pre>
+        
+    <p>Diffusion models are not just for generative tasks; they can be adapted for unsupervised, supervised, and reinforcement learning (RL). Here’s a breakdown:</p>
+    
+    <h3>Unsupervised Learning</h3>
+    <p>Diffusion models inherently learn data distributions by denoising. This makes them incredibly effective for unsupervised learning tasks like density estimation and self-supervised representation learning.</p>
+    
+    <h3>Supervised Learning</h3>
+    <p>By conditioning the reverse diffusion process on labels, diffusion models can be adapted to perform supervised classification or regression.</p>
+    
+    <h3>Reinforcement Learning</h3>
+    <p>Diffusion-based policies, such as in Diffusion Policy, learn to generate optimal action sequences by modeling the underlying policy as a distribution over possible actions. This improves multimodal decision-making and stability.</p>
     
     <h2>Conclusion: Diffusion Is the Free Lunch</h2>
     
