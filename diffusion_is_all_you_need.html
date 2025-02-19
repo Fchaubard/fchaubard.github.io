@@ -35,6 +35,10 @@
     
     <p>AR-LLMs assume we think by computing X FLOPS, emitting one token, then computing X FLOPS again for the next. But we don’t! We do a lot of upfront thinking and then generate structured output <strong>quickly</strong>. Diffusion allows that—more inference steps mean deeper pondering, leading to higher-quality generations.</p>
     
+    <h2>Vibe Check and is it biologically plausible?</h2>
+    
+    <p>I really hate that term but I can't think of a better header. When I talk to everyone who has tried diffusion training for their problem every says the same thing.. "it just works". Like no HPP tuning. That is nuts! The other vibe check is diffusion itself is very easy to see how the brain could be doing it. Diffusion is literally one of the most basic processes in physics. Its seen everywhere. And in the brain it obviously appears as well. You have path one which is a "clean" path and then you have a "dirty path" which is any other circuit that has a few more neurons in the way and then you just want to get the dirty path to match the clean. To "denoise" the clean. Thats it. I dont pretend to be a neuroscientist but it seems obvious. </p>
+    
     <h2>Diffusion as a General-Purpose Training Method</h2>
     
     <p>Diffusion models are not just for generative tasks; they can be adapted for unsupervised, supervised, and reinforcement learning (RL). Here’s a breakdown:</p>
@@ -49,19 +53,23 @@
     <p>Diffusion-based policies, such as in Diffusion Policy, learn to generate optimal action sequences by modeling the underlying policy as a distribution over possible actions. This improves multimodal decision-making and stability.</p>
     
     <h2>Pseudo Code for Diffusion-Based Learning</h2>
+    <p> The last argument I will make is occam's razor. Diffusion is so so so simple! Just look at this. It could be used for supervised learning, unsupervised learning, RL, etc. And it always "just works"! </p>
+    
     
     <pre>
     def diffusion_train(data, num_timesteps):
-        for x in data:
+        for (x, y) in data:
             noise = sample_gaussian_noise()
+            y_hat = x  # Initialize prediction sequence
             for t in range(num_timesteps):
-                x_noisy = apply_noise(x, noise, t)
-                loss = model.train_step(x_noisy, x)
+                y_hat = apply_noise(y_hat, noise, t)
+                loss = model.train(y_hat, y)  # Try to get y_hat closer to y
     
     def diffusion_inference(x, num_timesteps):
+        y_hat = x  # Start from noisy input
         for t in reversed(range(num_timesteps)):
-            x = model.denoise_step(x, t)
-        return x
+            y_hat = model.denoise_step(y_hat, t)
+        return y_hat
     </pre>
     
     <h2>Conclusion: Diffusion Is the Free Lunch</h2>
