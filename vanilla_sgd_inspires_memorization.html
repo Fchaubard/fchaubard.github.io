@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>How do we stop SGD+Backprop from memorizing, and learn to generalize instead</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h1>How do we stop SGD+Backprop from memorizing, and learn to generalize instead</h1>
+
+    <h2>Problem Statement</h2>
+    <p>SGD+Backprop is <strong>WRONG</strong>! There, I said it.</p>
+
+    <p>Overfitting is the core issue when training deep learning models with far more parameters than training samples. Standard optimizers (SGD, SGD+Momentum, Adam, etc.) inevitably lead to 100% training accuracy while test accuracy plateaus and then declines, forcing us to use early stopping. This is <strong>memorization</strong>, not <strong>generalization</strong> (Arpit et al., 2017) <a href="https://proceedings.mlr.press/v70/arpit17a.html">[1]</a>.</p>
+
+    <h2>Understanding Overfitting and Memorization</h2>
+    <p>Deep networks have an enormous capacity to memorize data, and this has been empirically validated. Arpit et al. (2017) showed that neural networks can memorize randomly labeled training data, indicating that standard optimization methods fail to prioritize generalizable patterns <a href="https://proceedings.mlr.press/v70/arpit17a.html">[1]</a>.</p>
+
+    <canvas id="sgdChart" width="600" height="400"></canvas>
+
+    <script>
+        var ctx = document.getElementById('sgdChart').getContext('2d');
+        var sgdChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ["Init", "Memorize a bit better", "Memorize even more", "Memorize completely", "General Solutions"],
+                datasets: [{
+                    label: "SGD Optimization Path",
+                    data: [100, 80, 50, 20, 95],
+                    borderColor: "blue",
+                    fill: false
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        min: 0,
+                        max: 120
+                    }
+                }
+            }
+        });
+    </script>
+
+    <h2>The Role of SGD in Memorization</h2>
+    <p>SGD is a powerful optimization technique, but it has a fundamental flaw: it optimizes for a solution that minimizes training loss, which often results in <em>memorization</em> rather than learning generalizable patterns. This is particularly evident in problems like factorial prediction, where the correct general solution is steep in the loss landscape, making it inaccessible to SGD <a href="https://arxiv.org/abs/1912.02292">[2]</a>.</p>
+
+    <h2>Why Memorization Happens</h2>
+    <ul>
+        <li><strong>Batch Size:</strong> Small batches introduce noise that can help escape sharp minima, while large batches lead to overfitting <a href="https://stats.stackexchange.com/questions/405053/can-small-sgd-batch-size-lead-to-faster-overfitting">[3]</a>.</li>
+        <li><strong>Initialization Scale:</strong> Large initializations can force extreme memorization by letting models fit noise directly <a href="https://arxiv.org/abs/2008.13363">[4]</a>.</li>
+        <li><strong>Model Capacity:</strong> Overparameterized networks memorize more easily than smaller models, given enough training time <a href="https://proceedings.mlr.press/v70/arpit17a.html">[1]</a>.</li>
+    </ul>
+
+    <h2>How to Prevent Memorization</h2>
+    <h3>Regularization Techniques</h3>
+    <p>Using L1/L2 weight decay, dropout, and batch normalization can prevent models from fully memorizing training data <a href="https://www.machinelearningmastery.com/introduction-to-regularization-to-reduce-overfitting-and-improve-generalization-error/">[5]</a>.</p>
+
+    <h3>Early Stopping</h3>
+    <p>Stopping training when validation performance deteriorates can prevent overfitting <a href="https://en.wikipedia.org/wiki/Early_stopping">[6]</a>.</p>
+
+    <h3>Gradient Agreement Filtering (GAF)</h3>
+    <p>One promising approach I’ve been working on is <strong>Gradient Agreement Filtering (GAF)</strong>, which filters gradient updates based on agreement across different batches. This helps ensure that gradient steps move toward a generalizable solution instead of overfitting <a href="https://arxiv.org/abs/2412.18052">[7]</a>.</p>
+
+    <h2>Conclusion</h2>
+    <p>SGD is fundamentally flawed for generalization. It is a <em>memorization optimizer</em> by default, and unless we change the optimization paradigm, models will continue to prefer memorization over learning true patterns.</p>
+
+    <p>The future of deep learning needs optimizers that <strong>actively discourage memorization</strong> and prioritize generalization. GAF is one step in that direction.</p>
+
+    <h2>References</h2>
+    <ol>
+        <li>Arpit, D. et al. (2017). A Closer Look at Memorization in Deep Networks. <a href="https://proceedings.mlr.press/v70/arpit17a.html">Proceedings of the 34th International Conference on Machine Learning</a>.</li>
+        <li>Nakkiran, P. et al. (2019). Deep Double Descent. <a href="https://arxiv.org/abs/1912.02292">arXiv:1912.02292</a>.</li>
+        <li>StackExchange Discussion on Batch Size and Overfitting. <a href="https://stats.stackexchange.com/questions/405053/can-small-sgd-batch-size-lead-to-faster-overfitting">Link</a>.</li>
+        <li>Mehta, H. et al. (2020). Extreme Memorization via Scale of Initialization. <a href="https://arxiv.org/abs/2008.13363">arXiv:2008.13363</a>.</li>
+        <li>Brownlee, J. (2020). Introduction to Regularization. <a href="https://www.machinelearningmastery.com/introduction-to-regularization-to-reduce-overfitting-and-improve-generalization-error/">Link</a>.</li>
+        <li>Wikipedia Entry on Early Stopping. <a href="https://en.wikipedia.org/wiki/Early_stopping">Link</a>.</li>
+        <li>Li, X. et al. (2020). Improve SGD Training via Aligning Mini-batches. <a href="https://arxiv.org/abs/2412.18052">arXiv:2412.18052</a>.</li>
+    </ol>
+
+    <hr>
+    <h3><a href="./index.html">Return Home</a></h3>
+</body>
+</html>
