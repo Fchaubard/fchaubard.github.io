@@ -35,7 +35,7 @@
     <p>Stopping training when validation performance deteriorates can prevent overfitting <a href="https://en.wikipedia.org/wiki/Early_stopping">[6]</a>.</p>
 
     <h3>Gradient Agreement Filtering (GAF)</h3>
-    <p>One promising approach I’ve been working on is <strong>Gradient Agreement Filtering (GAF)</strong>, which filters gradient updates based on agreement across different batches. This helps ensure that gradient steps move toward a generalizable solution instead of overfitting <a href="https://arxiv.org/abs/2412.18052">[7]</a>.</p>
+    <p>One promising approach I’ve been working on is <strong><a href="https://arxiv.org/pdf/2412.18052">Gradient Agreement Filtering (GAF)</a></strong>, which filters gradient updates based on agreement across different batches. This helps ensure that gradient steps move toward a generalizable solution instead of overfitting <a href="https://arxiv.org/pdf/2412.18052">[7]</a>.</p>
 
     <h2>Conclusion</h2>
     <p>SGD is fundamentally flawed for generalization. It is a <em>memorization optimizer</em> by default, and unless we change the optimization paradigm, models will continue to prefer memorization over learning true patterns.</p>
@@ -50,7 +50,7 @@
         <li>Mehta, H. et al. (2020). Extreme Memorization via Scale of Initialization. <a href="https://arxiv.org/abs/2008.13363">arXiv:2008.13363</a>.</li>
         <li>Brownlee, J. (2020). Introduction to Regularization. <a href="https://www.machinelearningmastery.com/introduction-to-regularization-to-reduce-overfitting-and-improve-generalization-error/">Link</a>.</li>
         <li>Wikipedia Entry on Early Stopping. <a href="https://en.wikipedia.org/wiki/Early_stopping">Link</a>.</li>
-        <li>Li, X. et al. (2020). Improve SGD Training via Aligning Mini-batches. <a href="https://arxiv.org/abs/2412.18052">arXiv:2412.18052</a>.</li>
+        <li>Chaubard, F. et al. (2024). Beyond Gradient Averaging in Parallel Optimization. <a href="https://arxiv.org/pdf/2412.18052">arXiv:2412.18052</a>.</li>
     </ol>
 
     <hr>
