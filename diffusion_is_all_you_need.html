@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Is Diffusion All You Need? Is Diffusion (Langevin Dynamics) the Free Lunch We Have All Been Waiting For?</title>
+</head>
+<body>
+    <h1>Is Diffusion All You Need? Is Diffusion (Langevin Dynamics) the Free Lunch We Have All Been Waiting For?</h1>
+    
+    <p>AR-LLMs work well for a lot of tasks but not all. We’ve seen this play out in multiple domains: GNNs were SOTA for protein folding and weather prediction, but now diffusion models are taking over. They already dominate Image Generation, Video Generation, and now Robotics! Diffusion Policy was a massive leap in robotics performance: <a href="https://diffusion-policy.cs.columbia.edu/">[1]</a>.</p>
+    
+    <blockquote>
+        "This paper introduces Diffusion Policy, a new way of generating robot behavior by representing a robot's visuomotor policy as a conditional denoising diffusion process. We benchmark Diffusion Policy across 12 different tasks from 4 different robot manipulation benchmarks and find that it consistently outperforms existing state-of-the-art robot learning methods with an average improvement of 46.9%."
+    </blockquote>
+    
+    <p>AlexNet dropped ImageNet error from ~30% to ~10%, but Diffusion Policy jumped robotics task success rates from ~20% to ~80%—this is an even bigger leap! This is the AlexNet moment for diffusion (Langevin dynamics) training!</p>
+    
+    <h2>Diffusion Is Eating Everything</h2>
+    
+    <p>Diffusion models are taking over. We’ve already seen it in weather prediction—GraphCast (GNN-based) got dethroned by GenCast (diffusion-based) <a href="https://arxiv.org/abs/2311.13262">[3]</a>. This trend keeps repeating. Why? Because diffusion models can model multimodal distributions effectively, scale naturally to high-dimensional action spaces, and provide incredible training stability.</p>
+    
+    <h2>The Squint Test: Why Diffusion Feels More "Right"</h2>
+    
+    <p>Here’s my <strong>squint test</strong>: If I squint at a plane and a bird, I can see how they’re similar—good. If I squint at an architecture with stacked transformers and 3 different training stages, and compare it to how the brain does continuous learning, it <strong>does NOT</strong> pass my squint test. The biggest fail? <strong>Time to first token.</strong></p>
+    
+    <p>Humans don’t just start spewing out words instantly. We ponder. We engage in a kind of iterative refinement before speaking. AR-LLMs don’t do this; they predict one token at a time, with fixed compute per token. But diffusion allows a more natural process: more inference steps = more “thinking” in latent space. This aligns with how humans process and generate thoughts!</p>
+    
+    <h2>LLADA: Diffusion Is Already Competitive with AR-LLMs</h2>
+    
+    <p>We’re already seeing diffusion models hold their own against AR-LLMs. Enter <a href="https://ml-gsai.github.io/LLaDA-demo/">LLADA</a>: <a href="https://arxiv.org/abs/2502.09992">[2]</a>.</p>
+    
+    <blockquote>
+        "LLaDA demonstrates strong scalability, outperforming our self-constructed ARM baselines. Remarkably, LLaDA 8B is competitive with strong LLMs like LLaMA3 8B in in-context learning and, after SFT, exhibits impressive instruction-following abilities. Moreover, LLaDA addresses the reversal curse, surpassing GPT-4o in a reversal poem completion task."
+    </blockquote>
+    
+    <p>AR-LLMs assume we think by computing X FLOPS, emitting one token, then computing X FLOPS again for the next. But we don’t! We do a lot of upfront thinking and then generate structured output <strong>quickly</strong>. Diffusion allows that—more inference steps mean deeper pondering, leading to higher-quality generations.</p>
+    
+    <h2>Diffusion as a General-Purpose Training Method</h2>
+    
+    <p>Diffusion models are not just for generative tasks; they can be adapted for unsupervised, supervised, and reinforcement learning (RL). Here’s a breakdown:</p>
+    
+    <h3>Unsupervised Learning</h3>
+    <p>Diffusion models inherently learn data distributions by denoising. This makes them incredibly effective for unsupervised learning tasks like density estimation and self-supervised representation learning.</p>
+    
+    <h3>Supervised Learning</h3>
+    <p>By conditioning the reverse diffusion process on labels, diffusion models can be adapted to perform supervised classification or regression.</p>
+    
+    <h3>Reinforcement Learning</h3>
+    <p>Diffusion-based policies, such as in Diffusion Policy, learn to generate optimal action sequences by modeling the underlying policy as a distribution over possible actions. This improves multimodal decision-making and stability.</p>
+    
+    <h2>Pseudo Code for Diffusion-Based Learning</h2>
+    
+    <pre>
+    def diffusion_train(data, num_timesteps):
+        for x in data:
+            noise = sample_gaussian_noise()
+            for t in range(num_timesteps):
+                x_noisy = apply_noise(x, noise, t)
+                loss = model.train_step(x_noisy, x)
+    
+    def diffusion_inference(x, num_timesteps):
+        for t in reversed(range(num_timesteps)):
+            x = model.denoise_step(x, t)
+        return x
+    </pre>
+    
+    <h2>Conclusion: Diffusion Is the Free Lunch</h2>
+    
+    <p>Diffusion models are hitting SOTA across so many domains, and I believe they <strong>are</strong> the free lunch we’ve all been waiting for. This is still early, but the results are already insane. Stay tuned!</p>
+    
+    <hr>
+    
+    <h2>References</h2>
+    
+    <ol>
+        <li id="ref1">Chi, H., Li, L., &amp; Wang, B. (2023). <em>Diffusion Policy: Visuomotor Policy Learning via Action Diffusion</em>. Retrieved from <a href="https://diffusion-policy.cs.columbia.edu/">Diffusion Policy Project</a>.</li>
+        <li id="ref2">GSAI Team (2025). <em>LLaDA: Scaling Diffusion Models for Language Tasks</em>. <a href="https://arxiv.org/abs/2502.09992">arXiv:2502.09992</a>.</li>
+        <li id="ref3">Pathak, A. et al. (2023). <em>GenCast: Diffusion-Based Weather Prediction</em>. <a href="https://arxiv.org/abs/2311.13262">arXiv:2311.13262</a>.</li>
+        <li id="ref4">Langevin, P. (1908). <em>On the Theory of Brownian Motion</em>. Comptes Rendus de l'Académie des Sciences.</li>
+    </ol>
+    
+    <hr>
+    <h3><a href="./index.html">Return Home</a></h3>
+</body>
+</html>
