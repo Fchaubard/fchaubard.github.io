@@ -35,7 +35,7 @@
     <p>Stopping training when validation performance deteriorates can prevent overfitting <a href="https://en.wikipedia.org/wiki/Early_stopping">[6]</a>.</p>
 
     <h3>Gradient Agreement Filtering (GAF)</h3>
-    <p>One promising approach I’ve been working on is <strong><a href="https://arxiv.org/pdf/2412.18052">Gradient Agreement Filtering (GAF)</a></strong>, which filters gradient updates based on agreement across different batches. This helps ensure that gradient steps move toward a generalizable solution instead of overfitting <a href="https://arxiv.org/pdf/2412.18052">[7]</a>.</p>
+    <p>One promising approach I’ve been working on is <strong><a href="https://arxiv.org/pdf/2412.18052">Gradient Agreement Filtering (GAF)</a></strong>, which filters gradient updates based on agreement across different batches. (<a href="https://github.com/Fchaubard/gradient_agreement_filtering">code here</a>). This helps ensure that gradient steps move toward a generalizable solution instead of overfitting <a href="https://arxiv.org/pdf/2412.18052">[7]</a>.</p>
 
     <h2>Conclusion</h2>
     <p>SGD is fundamentally flawed for generalization. It is a <em>memorization optimizer</em> by default, and unless we change the optimization paradigm, models will continue to prefer memorization over learning true patterns.</p>
