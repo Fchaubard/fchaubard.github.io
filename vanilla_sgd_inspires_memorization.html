@@ -16,32 +16,6 @@
     <h2>Understanding Overfitting and Memorization</h2>
     <p>Deep networks have an enormous capacity to memorize data, and this has been empirically validated. Arpit et al. (2017) showed that neural networks can memorize randomly labeled training data, indicating that standard optimization methods fail to prioritize generalizable patterns <a href="https://proceedings.mlr.press/v70/arpit17a.html">[1]</a>.</p>
 
-    <canvas id="sgdChart" width="600" height="400"></canvas>
-
-    <script>
-        var ctx = document.getElementById('sgdChart').getContext('2d');
-        var sgdChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: ["Init", "Memorize a bit better", "Memorize even more", "Memorize completely", "General Solutions"],
-                datasets: [{
-                    label: "SGD Optimization Path",
-                    data: [100, 80, 50, 20, 95],
-                    borderColor: "blue",
-                    fill: false
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: false,
-                        min: 0,
-                        max: 120
-                    }
-                }
-            }
-        });
-    </script>
 
     <h2>The Role of SGD in Memorization</h2>
     <p>SGD is a powerful optimization technique, but it has a fundamental flaw: it optimizes for a solution that minimizes training loss, which often results in <em>memorization</em> rather than learning generalizable patterns. This is particularly evident in problems like factorial prediction, where the correct general solution is steep in the loss landscape, making it inaccessible to SGD <a href="https://arxiv.org/abs/1912.02292">[2]</a>.</p>
