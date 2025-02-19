@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Master Plan to Solve AI</title>
+</head>
+<body>
+    <h2>My Research Plan to Solve AI</h2>
+    
+    <p>Today, we have four fundamental questions left to answer before we reach Artificial Superintelligence (ASI):</p>
+    
+    <h3>1) What’s the right architecture?</h3>
+    <p>LLMs work exceptionally well for a broad range of tasks, but they are not universally optimal. Graph Neural Networks (GNNs) are SOTA for protein folding [<a href="https://www.nature.com/articles/s41586-020-2339-x">Jumper et al., 2020</a>]. Counterfactual Regret Minimization (CFRM) is SOTA for poker [<a href="https://arxiv.org/pdf/1705.10462.pdf">Brown & Sandholm, 2017</a>]. Monte Carlo Tree Search (MCTS) and Deep Q-Networks (DQN) dominate in games and proof-based reasoning [<a href="https://www.nature.com/articles/nature16961">Silver et al., 2016</a>]. Ideally, a single model should achieve SOTA across all of these. <strong>It needs to pass the squint test!</strong></p>
+    
+    <h3>2) What’s the right solver?</h3>
+    <p>SGD today encourages approximately 90% memorization and only 10% generalization, which is fundamentally flawed. Current models fail to generalize reliably in many scenarios. We need a superior optimization method—perhaps Monte Carlo Tree Search (MCTS), Zeroth-Order Optimization (MeZO), or a continual backprop approach? This is my current focus and the biggest area the current ML community is not focusing on. The father of backprop doesnt believe in backprop. Hinton doesnt believe the brain does backprop, but instead forward forward. I have strong reason to believe this should work even better than first order methods bc it is not as sensitive to local rockiness in the loss landscape which is why RL doesnt work. </p>
+    
+    <h3>3) How do we train without overfitting?</h3>
+    <p>What is the optimal training procedure? Do we need massive datasets, an online RL setup, batch-based training, single-sample updates, denoising techniques, data augmentations, or something like Gradient Agreement Filtering (GAF)? We don't know the best method yet.</p>
+    
+    <h3>4) How do we validate the learned model?</h3>
+    <p>Current benchmarks are unreliable—static tests like GSM8k and MMLU are proving inadequate. Dynamic evaluation setups, such as LMSys, offer better real-world insight. How can we establish a rigorous and reliable validation framework?</p>
+    
+    <h2>A Problem Class to Infer Intelligence</h2>
+    <p>We define a general intelligence test as follows: given any arbitrary black-box, Turing-computable function \( f \) (e.g., factorial, Fibonacci, sorting functions, polynomial mappings), an intelligent system should construct and update a procedure \( p \) that efficiently samples from \( f \) and finds a generalizable neural representation \( f^* \) such that:</p>
+    
+    <p><strong>Hamming Distance( \( f^*(x) \), \( f(x) \) ) = 0 for all \( x \),</strong></p>
+    
+    <p>ensuring that the learned function perfectly maps the full domain without loss or introduction of information. Humans perform this task naturally—we are pattern-finders. Why can’t LLMs do the same?</p>
+    
+    <h2>Transduction vs. Program Induction</h2>
+    <p>There are two fundamental paradigms in how a model can learn to solve problems:</p>
+    <ul>
+        <li><strong>Transduction:</strong> The model itself becomes the mapping function from input to output. This approach, used in many neural network-based models, directly learns the transformation without explicitly constructing an underlying program.</li>
+        <li><strong>Program Induction:</strong> The model learns to generate an explicit program that can produce the correct outputs. This is more analogous to how humans abstract patterns into mathematical formulas or symbolic programs, allowing greater flexibility and generalization.</li>
+    </ul>
+    
+    <p>Modern AI systems tend to operate in a transductive way, memorizing mappings rather than explicitly deriving general rules. To advance AI, we need to shift towards program induction, where the model discovers and expresses reusable, compositional programs.</p>
+    
+    <h3>Human Problem-Solving Search Procedure</h3>
+    <p>Humans approach such tasks with an iterative process:</p>
+    <ol>
+        <li>Sample a few input-output pairs from \( f \).</li>
+        <li>Iterate over hypothesis functions and test their fit against known pairs.</li>
+        <li>Prune hypotheses that fail, refine those that succeed.</li>
+        <li>If multiple solutions remain, refine sampling strategy to disambiguate.</li>
+        <li>Converge on the simplest hypothesis with minimum Kolmogorov complexity.</li>
+    </ol>
+    
+    <p>However, today’s LLMs + SGD do not operate this way. Instead, they memorize large datasets in a batch-learning process, preventing them from achieving generalization. Even when they do generalize, it requires heavy manual interventions like Chain-of-Thought (CoT) prompting, external tool use (e.g., sympy, CVXPY), or huge hyperparameter sweeps.</p>
+    
+    <h2>Conclusion</h2>
+    <p>Current AI models fail to generalize because of architectural, optimization, and training limitations. If we want true AGI, we need better solvers step 1. This needs to be my focus right now. This research agenda is our path forward.</p>
+    
+    <hr>
+    <h2>References</h2>
+    <ul>
+        <li><a href="https://www.nature.com/articles/s41586-020-2339-x">AlphaFold (Jumper et al., 2020)</a></li>
+        <li><a href="https://arxiv.org/pdf/1705.10462.pdf">Libratus and CFRM (Brown & Sandholm, 2017)</a></li>
+        <li><a href="https://www.nature.com/articles/nature16961">AlphaGo and MCTS (Silver et al., 2016)</a></li>
+        <li><a href="https://arxiv.org/pdf/2404.14994">Transformers as Universal Approximators</a></li>
+        <li><a href="https://arxiv.org/pdf/2403.04861">Lottery Ticket Hypothesis</a></li>
+        <li><a href="https://arxiv.org/pdf/1904.01557">Mathematical Reasoning Abilities of Neural Models</a></li>
+    </ul>
+    <h3>Return <a href="./index.html">Home</a></h3>
+</body>
+</html>
