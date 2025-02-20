@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Journey Going from First Order to Zeroth Order</title>
+</head>
+<body>
+    <h1>My Journey Going from First Order to Zeroth Order</h1>
+    <h2>Breaking Free from Gradients: The Pain of Zeroth-Order Optimization</h2>
+    
+    <p>Its hard to describe how good backpropagation is at its job. When training deeper and deeper neural networks, the paramater space grows and the right direction to travel becomes harder and harder to fond especially at layer stages of training. As Sutton recently proved in his continuous lesrning paper, plasticity reduces with training. Initially almost all directions reduce loss. With every iter another singularity/dim of degeneracy is intoreuced reducing the set of loss reducijg directions. Backprop always finds the best direction provided the set of loss reducing directions isnt null. Zeroth Order on the other hand must guess and test then step. So it has to get lucky. Ans the larger the model the harder it is to get lucky. and it doesnt so it doesnt work. This is why Backprop has been king for so long. But it comes with a lot of terms and conditions. It works, but we are then restricted to continuous and differentiable operations and we have to maintian activations to compute the chain of gradients. Thats not terrible for most DL but for sequential modeling w/ long contexts its a complete deal breaker. And as model sizes get larger and memory constraints become the bottleneck, backprop through time (BPTT) for RNNs and large transformers is an absolute killer. This is why Elon and the hyperscalers are procuring nuclear powerplants to train and run their AI. Thats how absurdly inefficient it is in terms of VRAM requirments. Its like we've invented a .1% efficinet carnot engine and instead of trying to make it more effiicnet to make a car we nust say get me a gas tank the size of rhode island and make the engine huge! BPTT scales as <strong>O(c)</strong> in VRAM complexity, where c is context length and vanilla transformers are worse, <strong>O(c^2)</strong> as you need to store the attention matrix. Note, Mamba and Neural Sparse Attention (NSA) say they solve this but Ive not tested myself. </p>
+    
+    <p>Enter <strong>zeroth-order (ZO) optimization</strong>: training without gradients. No BPTT, no storing activations, no exploding VRAM. Sounds amazing, right? But here’s the catch—ZO optimization behaves <em>very</em> differently from SGD. You start training with tons of plasticity—almost every random perturbation decreases loss. Then, as training progresses, things slow down very fast. Suddenly, most perturbation directions stop helping. Learning stops. Almost all direction are degenerate, do not impact output. And when scaling to large models, it dies <em>way</em> faster making training impossible even for memorizing a single batch. Why?</p>
+    
+    <p>Let’s get into it. Below, I walk through the history of zeroth-order methods, the scaling challenges they hit, how they compare to first-order methods, and why Watanabe’s work on singular learning theory helps explain the weird things we’re seeing when pushing ZO to large models. Spoiler: it all comes down to <strong>singularities</strong> and the effective dimensionality of the optimization landscape.</p>
+    
+    <h2>1. Zeroth-Order Optimization: A Crash Course</h2>
+    
+    <h3>1.1 Classical ZO Methods</h3>
+    <p>The simplest way to estimate gradients without computing them directly is to use <strong>finite differences</strong>. Given a function \( L(\theta) \), we can approximate its gradient along coordinate \( \theta_i \) as:</p>
+    
+    <div class="math">$$
+    \frac{\partial L}{\partial \theta_i} \approx \frac{L(\theta + \mu e_i) - L(\theta - \mu e_i)}{2\mu}
+    $$</div>
+    
+    <p>where \( e_i \) is a unit vector along the \( i \)-th coordinate. Simple? Sure. Scalable? Not at all. If you’ve got a million parameters, you need two million function evaluations per update. That’s a disaster.</p>
+    
+    <p>To fix this, researchers came up with <strong>simultaneous perturbation</strong> methods like <strong>SPSA (Spall, 1992)</strong>, which estimate gradients by perturbing all parameters at once using a single random vector:</p>
+    
+    <div class="math">$$
+    g_i = \frac{L(\theta + \sigma \Delta) - L(\theta - \sigma \Delta)}{2\sigma \Delta_i}
+    $$</div>
+    
+    <p>This drops function evaluations to just <strong>two per step</strong>, independent of dimension. Evolution Strategies (ES) takes this further by averaging over multiple perturbations, effectively performing gradient descent in a smoothed loss landscape.</p>
+    
+    <p>The bottom line: classical ZO methods work, but they’re noisy and don’t scale well to large models unless you get creative.</p>
+    
+    <h3>1.2 Modern ZO Methods</h3>
+    <p>Recently, researchers have adapted ZO methods for deep learning. Some highlights:</p>
+    <ul>
+        <li><strong>MeZO (Malladi et al., 2023)</strong>: A memory-efficient ZO optimizer for fine-tuning LLMs without backprop. Enables single-GPU training of models 10x larger than what standard backprop allows.</li>
+        <li><strong>DeepZero (Chen et al., 2024)</strong>: The first ZO method to train deep networks <em>from scratch</em> with near-SGD accuracy on CIFAR-10.</li>
+        <li><strong>LeZO (Wang et al., 2024)</strong>: A structured ZO method that speeds up training by perturbing only select layers.</li>
+    </ul>
+    
+    <p>These methods prove that ZO isn’t just a toy algorithm. It can scale—but only if you respect the constraints.</p>
+    
+    <h2>2. Scaling Challenges: Why ZO Stops Working</h2>
+    <p>Here’s where things get weird. You’d expect that as you scale up a model, adding more parameters would give you more directions to escape local minima. More dimensions should mean better optimization, right? Nope. Instead, we see:</p>
+    <ul>
+        <li><strong>Early stagnation:</strong> ZO training slows down way earlier than SGD.</li>
+        <li><strong>Plateaus everywhere:</strong> Random perturbations stop reducing loss.</li>
+        <li><strong>Reduced memorization:</strong> Even simple datasets don’t hit near-zero training loss.</li>
+    </ul>
+    
+    <p>Turns out, this is all tied to <strong>singular learning theory</strong> (Watanabe, 2001). Neural networks have <strong>singularities</strong>—regions in parameter space where many different weight configurations produce the same output. In these regions, the Fisher Information Matrix is degenerate, meaning standard optimization theory breaks down.</p>
+    
+    <p>SGD eventually escapes these plateaus because gradients accumulate in the right directions. But ZO methods waste time perturbing flat directions, meaning they often <em>never</em> escape.</p>
+    
+    <h2>3. Where Do We Go from Here?</h2>
+    <p>ZO methods aren’t going to replace SGD, but they offer a promising alternative where backprop is infeasible. The key to making them work at scale is:</p>
+    <ul>
+        <li><strong>Smarter sampling:</strong> Choosing perturbation directions adaptively.</li>
+        <li><strong>Leveraging structure:</strong> Exploiting sparsity in neural networks.</li>
+        <li><strong>Hybrid approaches:</strong> Mixing ZO with first-order methods when possible.</li>
+    </ul>
+    
+    <p>There’s a lot more to explore. But for now, the takeaway is this: <strong>ZO scales—but only if you respect the math.</strong></p>
+    
+    <hr>
+    
+    <h2>References</h2>
+    <ol>
+        <li>Spall, J. (1992). <em>Multivariate Stochastic Approximation Using a Simultaneous Perturbation Gradient Approximation</em>. IEEE Transactions on Automatic Control.</li>
+        <li>Malladi et al. (2023). <em>MeZO: Memory-Efficient Zeroth-Order Optimization</em>. arXiv preprint.</li>
+        <li>Chen et al. (2024). <em>DeepZero: Training Deep Networks Without Gradients</em>. arXiv preprint.</li>
+        <li>Watanabe, S. (2001). <em>Singular Learning Theory</em>. Advances in Neural Information Processing Systems.</li>
+    </ol>
+    
+    <h3>Return <a href="./index.html">Home</a></h3>
+</body>
+</html>
