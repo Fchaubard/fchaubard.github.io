@@ -25,56 +25,58 @@
     <h2>3. Automation of Interfacing with People</h2>
     <p>This will be last. Most people don't think so. While AI can do a lot of interacting, humans like to deal with humans sometimes. Using AI in certain situations feels sad and lonely. We are social animals. We are not thinking machines that feel, we are feeling machines that think. Maybe AI will sympathize with that better than humans one day, but they can never empathize because they are not human. Roles that involve personal interaction are the most resistant to automation. Human connection is a critical component in professions like therapy, entertainment, sales, recruitment, politics, and high-end hospitality. For example, patrons paying a premium at a fine dining establishment expect personalized service from human staff. Similarly, individuals facing serious medical diagnoses often prefer consultations with human doctors to provide empathy and nuanced understanding. While AI can assist in these roles, fully replacing the human element is unlikely. Perhaps this will get to 90% automation but it will require a rewiring of our society, and could take 50 to 200 years if ever.</p>
     
-    <h2>Visualizing the Automation Timeline</h2>
-    <canvas id="automationChart" width="600" height="400"></canvas>
-    <script>
-        var ctx = document.getElementById('automationChart').getContext('2d');
-        var automationChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: ['2025', '2035', '2045', '2055', '2065', '2075', '2085', '2095', '2105', '2115'],
-                datasets: [
-                    {
-                        label: 'Decision-Making Tasks',
-                        data: [30, 60, 80, 90, 92, 93, 94, 95, 96, 97],
-                        borderColor: 'blue',
-                        fill: false
-                    },
-                    {
-                        label: 'Physical Tasks',
-                        data: [10, 20, 30, 50, 60, 70, 80, 85, 88, 90],
-                        borderColor: 'green',
-                        fill: false
-                    },
-                    {
-                        label: 'Interfacing with People',
-                        data: [5, 10, 15, 20, 30, 40, 50, 60, 70, 80],
-                        borderColor: 'red',
-                        fill: false
+    <h2>Automation Timelines</h2>
+    <canvas id="automationChart" width="400" height="250"></canvas>
+<script>
+    var ctx = document.getElementById('automationChart').getContext('2d');
+    var automationChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['2025', '2035', '2045', '2055', '2065', '2075', '2085', '2095', '2105', '2115'],
+            datasets: [
+                {
+                    label: 'Decision-Making Tasks',
+                    data: [30, 60, 80, 90, 92, 93, 94, 95, 96, 97],
+                    borderColor: 'blue',
+                    fill: false
+                },
+                {
+                    label: 'Physical Tasks',
+                    data: [10, 20, 30, 50, 60, 70, 80, 85, 88, 90],
+                    borderColor: 'green',
+                    fill: false
+                },
+                {
+                    label: 'Interfacing with People',
+                    data: [5, 10, 15, 20, 30, 40, 50, 60, 70, 80],
+                    borderColor: 'red',
+                    fill: false
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 100,
+                    title: {
+                        display: true,
+                        text: 'Percentage of Automation'
                     }
-                ]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        max: 100,
-                        title: {
-                            display: true,
-                            text: 'Percentage of Automation'
-                        }
-                    },
-                    x: {
-                        title: {
-                            display: true,
-                            text: 'Year'
-                        }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Year'
                     }
                 }
             }
-        });
-    </script>
+        }
+    });
+</script>
+
     
     <hr>
     
