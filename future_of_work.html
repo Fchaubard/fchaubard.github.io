@@ -26,9 +26,11 @@
     <p>This will be last. Most people don't think so. While AI can do a lot of interacting, humans like to deal with humans sometimes. Using AI in certain situations feels sad and lonely. We are social animals. We are not thinking machines that feel, we are feeling machines that think. Maybe AI will sympathize with that better than humans one day, but they can never empathize because they are not human. Roles that involve personal interaction are the most resistant to automation. Human connection is a critical component in professions like therapy, entertainment, sales, recruitment, politics, and high-end hospitality. For example, patrons paying a premium at a fine dining establishment expect personalized service from human staff. Similarly, individuals facing serious medical diagnoses often prefer consultations with human doctors to provide empathy and nuanced understanding. While AI can assist in these roles, fully replacing the human element is unlikely. Perhaps this will get to 90% automation but it will require a rewiring of our society, and could take 50 to 200 years if ever.</p>
     
     <h2>Automation Timelines</h2>
-    <canvas id="automationChart" style="width: 300px; height: 200px;"></canvas>
 
+
+    <canvas id="automationChart" width="300" height="300"></canvas>
 <script>
+    // Ensure that Chart.js is loaded before this script runs.
     var ctx = document.getElementById('automationChart').getContext('2d');
     var automationChart = new Chart(ctx, {
         type: 'line',
@@ -56,8 +58,10 @@
             ]
         },
         options: {
-            responsive: true,
-            maintainAspectRatio: false,
+            animation: {
+                duration: 0 // Disable animation for snappier rendering
+            },
+            responsive: false, // Keep fixed 300x300 canvas dimensions
             scales: {
                 y: {
                     beginAtZero: true,
