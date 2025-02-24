@@ -7,12 +7,22 @@
 <body>
     <h1>Is Diffusion All You Need? Is Diffusion (Langevin Dynamics) the Free Lunch We Have All Been Waiting For?</h1>
     
-    <p>Every month that passes, I grow more convinced that Diffusion is the free lunch we have all been searching for in AI. Its dominating subfield after subfield. It works so well because diffusion models can model multimodal distributions effectively, scales naturally to high-dimensional action spaces, and provide incredible training stability.. as many who have tried them say "It just works". We’ve seen this play out in multiple domains. For example, GNNs were SOTA for protein folding and weather prediction (GraphCast) but last year got dethroned by GenCast (diffusion-based) <a href="https://arxiv.org/abs/2311.13262">[3]</a>. They have already dominated Image Generation 3 years ago, Video Generation 2 years ago, and then last year Diffusion Policy dominated robotics: <a href="https://diffusion-policy.cs.columbia.edu/">[1]</a> which IMO is a bigger deal than AlexNet! Big claim I know. But just read this from their abstract: </p> 
-    <blockquote>
-        "This paper introduces Diffusion Policy, a new way of generating robot behavior by representing a robot's visuomotor policy as a conditional denoising diffusion process. We benchmark Diffusion Policy across 12 different tasks from 4 different robot manipulation benchmarks and find that it consistently outperforms existing state-of-the-art robot learning methods with an average improvement of 46.9%."
-    </blockquote>
+    <p>Every month that passes, I grow more convinced that Diffusion (i.e. training w/ Langevin Dynamics) is the free lunch we have all been searching for in AI. Its dominating subfield after subfield. Diffusion models can model multiple distributions effectively, mapping very high-dim state spaces to very high-dim action spaces, and do so with incredible training stability. As many who have tried them say: "It just works". We’ve seen this dominance play out in multiple domains. </p>
     
-    <p>AlexNet dropped ImageNet error from ~30% to ~10%, but Diffusion Policy jumped robotics task success rates from ~20% to ~80%—this is a much bigger leap! This is the AlexNet moment for diffusion (Langevin dynamics) training IMO and the AI community is not really talking about it. And this week, LLADA <a href="https://arxiv.org/abs/2502.09992">[2]</a> just got published and gets comparable performance to AR-based LLMs! Moreso, there has been no "Grad Student Descent" or nowadays "VC descent" on it yet. Just wait. Does the rest of the AI community not see it yet? Just a matter of time until its used to solve GO, poker, MARL, and other hold out subfields where diffusion is not SOTA yet. </p>
+    <ol>
+        <li> GNNs were SOTA for protein folding and weather prediction (GraphCast) but last year got dethroned by GenCast (diffusion-based) <a href="https://arxiv.org/abs/2311.13262">[3]</a></li>
+        <li> They have already dominated Image Generation 3 years ago</li>
+         <li> Video Generation 2 years ago</li>
+         <li> Diffusion Policy dominated robotics: <a href="https://diffusion-policy.cs.columbia.edu/">[1]</a> which IMO is a bigger deal than AlexNet! </li>
+         <li> AlexNet dropped ImageNet error from ~30% to ~10%, but Diffusion Policy jumped robotics task success rates from ~20% to ~80%—this is a much bigger leap! This is the AlexNet moment for diffusion (Langevin dynamics) training.  From their abstract: </li>
+         <blockquote>
+            "This paper introduces Diffusion Policy, a new way of generating robot behavior by representing a robot's visuomotor policy as a conditional denoising diffusion process. We benchmark Diffusion Policy across 12 different tasks from 4 different robot manipulation benchmarks and find that it consistently outperforms existing state-of-the-art robot learning methods with an average improvement of 46.9%."
+        </blockquote>
+     
+        <li> And this week, LLADA <a href="https://arxiv.org/abs/2502.09992">[2]</a> just got published and gets comparable performance to AR-based LLMs! Moreso, there has been no "Grad Student Descent" or nowadays "VC descent" on it yet. Just wait. </li>
+    </ol> 
+   
+    <p> IMO the AI community is not making as big a deal about this as I think they should. Does the rest of the AI community not see it yet? Just a matter of time until its used to solve GO, poker, MARL, and other hold out subfields where diffusion is not SOTA yet. </p>
     
     <h2>The Squint Test: Why Diffusion Feels More "Right" than AR</h2>
     
