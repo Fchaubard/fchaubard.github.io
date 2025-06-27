@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Brains dont backprop</title>
+</head>
+<body>
+  <h1>Brains don’t backprop</h1>
+  
+  <h2>Neurons are one-way</h2>
+  <p>
+  Every biological synapse sends its spikes <em>forward</em> from the presynaptic cell to the postsynaptic cell and no biologist has ever seen it go in reverse. 
+  There is no mirror channel carrying an exact or even approx. error gradient in the opposite direction, which is standard backpropagation  
+  No anatomical study has ever caught a neuron "firing backward."  
+  Cortical feedback paths exist, but they form messy "forward pass" loops rather than weight-tied, layer-by-layer mirrors, so the backward pass of deep-learning orthodoxy has nowhere to run.:contentReference[oaicite:0]{index=0}
+  </p>
+  
+  <h2>BPTT (Backprop through time) requires long range sequence length sized activation memory buffers... just impractical</h2>
+  <p>
+  Backpropagation-through-time is particularly implausible. BPTT unrolls a recurrent network over every time step, then replays the whole movie in reverse to assign credit.  
+  That means caching <em>every</em> intermediate activation.  
+  Push the sequence length to hundreds or even millions of time steps, the kind animals routinely handle to achieve long range dependence, and you would need a storage array billions times larger than the hippocampus to hold these bits.  
+  If evolution had relied on BPTT, learning a long-range dependency would feel like buffering a three-hour film before you could react.:contentReference[oaicite:1]{index=1}
+  </p>
+  
+  <h2>Guess-and-check beats perfect gradients</h2>
+  <p>
+  As I recently showed in my <a href="https://arxiv.org/pdf/2505.17852">ZO paper</a>, networks trained with zero order can master complex tasks just the same or even better than BPTT, with the only onus on the cortex is to reproduce the same probe again during the update (perhaps thats what the hippocampus is doing during replay? replaying probes not "memories"?).
+  Instead of precise derivatives, the brain leans on noisy, local rules as is well observed.  
+  Synapses perhaps keep a short eligibility trace of their recent activity (or a probe vector??); when a global signal like a dopamine burst arrives, "nice move" (pleasure) or "bad idea" (pain), Oja's rule applies to update the weights only along the eligible connections (perturbed params?).  
+  This reward-modulated Hebbian tweak could be a <em>zero-order</em> update: it nudges weights in the direction of better outcomes without ever computing ∂L/∂w. Perhaps this update is the sum of many probes scaled by the gradient estimate in some way? IDK... someone else will have to prove this.. 
+   </p>
+
+  <h2>Why ZO solvers >> BP: Measuring coastlines with a ruler and 2 ovens</h2>
+  <p>
+    Aside from biological implausability, I believe ZO is actually just a superior solver (if we figure it out). First and obvious, ZO requires orders of magnitude less memory in exchange for more fpasses (compute). Compute is cheap. HBM is expensive. So this is a good thing. My regression on hourly GPU prices suggest 18x more expensive (comparing marginal more TFLOP to an additional GB of VRAM). Second, and more importantly, Backprop provides the gradients exactly. This is <b>not</b> good. WHAT? Heresy! My hot take: Its like measuring the coastline with a ruler. Too granular. You need to course-grain in optimization. Zero Order convolves the loss with the probe kernel which is the same as optimizing a smoothed surrogate so won't get stuck, allows larger updates (no clipping!), and is more like measuring the coastline by eye balling on a map (or time of travel * velocity of my boat = d). Much easier and faster. Another property we posess that Backprop does not is continuous learning. To get a DL model to train well, you need to watch it like a hawk and constantly measure validation loss and when val loss starts to rise (or stops declining) then we need to stop training in fear it will overfit. We dont. If you keep giving me more and more multiplication questions, I dont get worse at addition or subtraction. So a key property of our solver is continous, infinite learning has to work. No catostrophic forgetting. Some friends have said, so what man, it works.. just stop the training and thats fine. An analogy I have proposed is the following. You have to bake some brownies, you have 2 ovens. One will cook the brownies perfectly and then when its done will turn down the heat to just keep them warm so they will never burn no matter if you leave them in there for 3 hours or 3 days. And the other oven you have to watch like a hawk, and take the brownies out at the exact right time otherwise they will be under/overcooked. Who chooses the former?      
+    </p>
+  
+  <h2>Credit assignment without backprop</h2>
+  <p>
+  This part I am more shaky on. How does it happen? Perhaps the brain solves long-range credit assignment and update rules by fpassing millions of different perturbations all in parallel, and caching off the probes that resulting in lower loss, higher reward, and replay them during sleep to update weights? 
+  As neuroscientist Blake Richards quips, “We know the brain doesn’t do backprop, but it still needs a solution to the credit problem,” and that solution looks a lot more like zeroth-order reinforcement than autograd.:contentReference[oaicite:3]{index=3}
+  Why isnt the DL community looking at ZO more seriously? No one is.. addicted to the success of BP, but its so obviously not the answer! </p>
+  
+  <h3>References</h3>
+  <ol>
+    <li>Lillicrap T. P. et al. <em>Backpropagation and Deep Learning in the Brain</em>, Simons Institute talk, 2018.:contentReference[oaicite:4]{index=4}</li>
+    <li>Hinton G. E. <em>The Forward-Forward Algorithm: Some Preliminary Investigations</em>, arXiv:2212.13345, 2022.:contentReference[oaicite:5]{index=5}</li>
+    <li>Miconi T., Clune J., Stanley K. O. <em>Biologically plausible learning in recurrent neural networks</em>, eLife 6:e20899, 2017.:contentReference[oaicite:6]{index=6}</li>
+    <li>Song H. F. et al. <em>Reward-based training of recurrent neural networks for cognitive tasks</em>, eLife 6:e21492, 2017.:contentReference[oaicite:7]{index=7}</li>
+    <li>Richards B. Twitter post, 12 Mar 2019.:contentReference[oaicite:8]{index=8}</li>
+  </ol>
+
+
+
+
+    <h3><a href="./index.html">Return Home</a></h3>
+</body>
+</html>
