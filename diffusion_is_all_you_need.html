@@ -40,6 +40,14 @@
     
     <p> So not only is it equivalent performance but is more "human-like" as it doesnt fail in ways that AR-LLMs fail. Also think about the compute pattern in humans vs. AR-LLMs. AR-LLMs think by computing X FLOPS, emitting one token, then computing X FLOPS again for the next token.. so on and so on. But we don’t! We do a lot of "upfront" thinking and then generate structured output <strong>quickly</strong>. Diffusion allows that. More inference steps mean deeper pondering, leading to higher-quality generations.</p>
     
+    <h2>Diffisuion is implicit "self-boosting"</h2>
+    
+    <p>
+    <strong>Power of boosting.</strong> In machine learning, <em>boosting</em> is a simple yet effective technique to build a strong predictor by chaining many <em>weak learners</em>, each only slightly better than chance, so that every learner focuses on the residual mistakes left by the previous learner, so you can think of training each successive model on the mistakes of the previous models, driving the overall "ensemble" error down exponentially.
+    <br>
+    <strong>Why Diffusion can be casted as self-boosting.</strong> Training with denoising diffusion, the same network is applied for <em>T</em> time-steps, starting from pure noise and removing some of the noise at each step (or adding non-noise if predicting x or v instead of the error). So each step is a <em>weak</em> denoiser.  Because every step conditions on the partially denoised sample produced one step earlier, the residual errors are automatically re-weighted concentrating almost entirely on what earlier steps failed to fix. Analytically, the reverse-time SDE can be written as an iterative estimator whose fixed-point is the data distribution, mirroring how boosting iteratively reduces bias. Empirically, work such as CVPR 2024’s MASF shows that “ensembling” (or averaging in that case) intermediate denoised states further reduces variance, directly echoing classic boosting theory. The diffusion process is therefore a single network <em>bootstrapping ITSELF through time</em>: hundreds of weak denoising updates accumulate into a high-fidelity sample, just as boosting turns weak learners into a strong one, hence diffusion can be viewed as implicit “self-boosting” where the network becomes on ensemble of "weak" learners which makes it work so well as a training technique, IF you have sufficient capacity in the model.
+    </p>    
+    
     <h2>Vibe Check and is it biologically plausible?</h2>
     
     <p>I really hate that term but I can't think of a better header. When I talk to everyone who has tried diffusion training for their problem every says the same thing.. "it just works". Like no HPP tuning. That is nuts! The other vibe check is diffusion itself is very easy to see how the brain could be doing it. Diffusion is literally one of the most basic processes in physics. Its seen everywhere. And in the brain it obviously appears as well. You have path one which is a "clean" path and then you have a "dirty path" which is any other circuit that has a few more neurons in the way and then you just want to get the dirty path to match the clean. To "denoise" the clean. Thats it. I dont pretend to be a neuroscientist but it seems obvious. </p>
@@ -66,18 +74,9 @@
         return y_hat
     </pre>
         
-    <p>Diffusion models are not just for generative tasks; they can be adapted for unsupervised, supervised, and reinforcement learning (RL). Here’s a breakdown:</p>
+    <p>And wouldn't evolution more likely evolve to find the simplest algorithm? Especially since "adding noise" is pretty easy for nature to achieve. I also don't believe in backprop as the right solver as neurons are one-way (you can't backprop through a neuron). So IMO the most exciting direction is Zero-Order RNNs + Diffusion Online RL. To me, that is the recipe to crank on. </p>
     
-    <h3>Unsupervised Learning</h3>
-    <p>Diffusion models inherently learn data distributions by denoising. This makes them incredibly effective for unsupervised learning tasks like density estimation and self-supervised representation learning.</p>
-    
-    <h3>Supervised Learning</h3>
-    <p>By conditioning the reverse diffusion process on labels, diffusion models can be adapted to perform supervised classification or regression.</p>
-    
-    <h3>Reinforcement Learning</h3>
-    <p>Diffusion-based policies, such as in Diffusion Policy, learn to generate optimal action sequences by modeling the underlying policy as a distribution over possible actions. This improves multimodal decision-making and stability.</p>
-    
-    <h2>Conclusion: Diffusion Is the Free Lunch</h2>
+    <h2>Conclusion: Diffusion Is our Free Lunch! So go use it!</h2>
     
     <p>Diffusion models are hitting SOTA across in more and more subfields, and I believe that trend will not stop. I think its the most likely candidate for <strong>the</strong> the free lunch we’ve all been waiting for. Still early, but the results are already insane so far. </p>
     
@@ -87,8 +86,8 @@
     
     <ol>
         <li id="ref1">Chi, H., Li, L., &amp; Wang, B. (2023). <em>Diffusion Policy: Visuomotor Policy Learning via Action Diffusion</em>. Retrieved from <a href="https://diffusion-policy.cs.columbia.edu/">Diffusion Policy Project</a>.</li>
-        <li id="ref2">GSAI Team (2025). <em>LLaDA: Scaling Diffusion Models for Language Tasks</em>. <a href="https://arxiv.org/abs/2502.09992">arXiv:2502.09992</a>.</li>
-        <li id="ref3">Pathak, A. et al. (2023). <em>GenCast: Diffusion-Based Weather Prediction</em>. <a href="https://arxiv.org/abs/2311.13262">arXiv:2311.13262</a>.</li>
+        <li id="ref2">GSAI Team (2025). <em>LLaDA: Scaling Diffusion Models for Language Tasks</em>. <a href="https://arxiv.org/pdf/2502.09992">arXiv:2502.09992</a>.</li>
+        <li id="ref3">Pathak, A. et al. (2023). <em>GenCast: Diffusion-Based Weather Prediction</em>. <a href="https://arxiv.org/pdf/2312.15796">arXiv:2312.15796</a>.</li>
         <li id="ref4">Langevin, P. (1908). <em>On the Theory of Brownian Motion</em>. Comptes Rendus de l'Académie des Sciences.</li>
     </ol>
     
