@@ -12,7 +12,7 @@
   Every biological synapse sends its spikes <em>forward</em> from the presynaptic cell to the postsynaptic cell and no biologist has ever seen it go in reverse. 
   There is no mirror channel carrying an exact or even approx. error gradient in the opposite direction, which is standard backpropagation  
   No anatomical study has ever caught a neuron "firing backward."  
-  Cortical feedback paths exist, but they form messy "forward pass" loops rather than weight-tied, layer-by-layer mirrors, so the backward pass of deep-learning orthodoxy has nowhere to run.:contentReference[oaicite:0]{index=0}
+  Cortical feedback paths exist, but they form messy "forward pass" loops rather than weight-tied, layer-by-layer mirrors, so the backward pass of deep-learning orthodoxy has nowhere to run. [1]
   </p>
   
   <h2>BPTT (Backprop through time) requires long range sequence length sized activation memory buffers... just impractical</h2>
@@ -20,7 +20,7 @@
   Backpropagation-through-time is particularly implausible. BPTT unrolls a recurrent network over every time step, then replays the whole movie in reverse to assign credit.  
   That means caching <em>every</em> intermediate activation.  
   Push the sequence length to hundreds or even millions of time steps, the kind animals routinely handle to achieve long range dependence, and you would need a storage array billions times larger than the hippocampus to hold these bits.  
-  If evolution had relied on BPTT, learning a long-range dependency would feel like buffering a three-hour film before you could react.:contentReference[oaicite:1]{index=1}
+  If evolution had relied on BPTT, learning a long-range dependency would feel like buffering a three-hour film before you could react.[2]
   </p>
   
   <h2>Guess-and-check beats perfect gradients</h2>
@@ -39,16 +39,16 @@
   <h2>Credit assignment without backprop</h2>
   <p>
   This part I am more shaky on. How does it happen? Perhaps the brain solves long-range credit assignment and update rules by fpassing millions of different perturbations all in parallel, and caching off the probes that resulting in lower loss, higher reward, and replay them during sleep to update weights? 
-  As neuroscientist Blake Richards quips, “We know the brain doesn’t do backprop, but it still needs a solution to the credit problem,” and that solution looks a lot more like zeroth-order reinforcement than autograd.:contentReference[oaicite:3]{index=3}
+  As neuroscientist Blake Richards quips, “We know the brain doesn’t do backprop, but it still needs a solution to the credit problem,” and that solution looks a lot more like zeroth-order reinforcement than autograd. [4]
   Why isnt the DL community looking at ZO more seriously? No one is.. addicted to the success of BP, but its so obviously not the answer! </p>
   
   <h3>References</h3>
   <ol>
-    <li>Lillicrap T. P. et al. <em>Backpropagation and Deep Learning in the Brain</em>, Simons Institute talk, 2018.:contentReference[oaicite:4]{index=4}</li>
-    <li>Hinton G. E. <em>The Forward-Forward Algorithm: Some Preliminary Investigations</em>, arXiv:2212.13345, 2022.:contentReference[oaicite:5]{index=5}</li>
-    <li>Miconi T., Clune J., Stanley K. O. <em>Biologically plausible learning in recurrent neural networks</em>, eLife 6:e20899, 2017.:contentReference[oaicite:6]{index=6}</li>
-    <li>Song H. F. et al. <em>Reward-based training of recurrent neural networks for cognitive tasks</em>, eLife 6:e21492, 2017.:contentReference[oaicite:7]{index=7}</li>
-    <li>Richards B. Twitter post, 12 Mar 2019.:contentReference[oaicite:8]{index=8}</li>
+    <li>Lillicrap T. P. et al. <em>Backpropagation and Deep Learning in the Brain</em>, Simons Institute talk, 2018.</li>
+    <li>Hinton G. E. <em>The Forward-Forward Algorithm: Some Preliminary Investigations</em>, arXiv:2212.13345, 2022.</li>
+    <li>Miconi T., Clune J., Stanley K. O. <em>Biologically plausible learning in recurrent neural networks</em>, eLife 6:e20899, 2017.</li>
+    <li>Song H. F. et al. <em>Reward-based training of recurrent neural networks for cognitive tasks</em>, eLife 6:e21492, 2017.</li>
+    <li>Richards B. Twitter post, 12 Mar 2019.</li>
   </ol>
 
 
