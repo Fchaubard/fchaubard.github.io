@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>An After Action Review (AAR) for scientific progress over the last 1000 years</title>
+</head>
+<body>
+
+<h1 id="top">An After Action Review (AAR) for scientific progress over the last 1000 years: Humanity’s Regret Curve</h1>
+
+<p>We all want a better world. A cure to disease, a pill that will let us live forever, the ability to teleport to anywhere on earth, free energy, no crime, infinite food, etc etc. But these things require scientific progress. The faster science advances, the closer we get to these goals. So its natural to ask what are the drivers of the rate of scientific progress. What are the causes of its lack thereof? When is progress quick? When is it slow? And why? Once we understand this a bit more we can hopefully strengthen the former, and eliminate the latter. </p>
+
+<p>A common excercise in the military is an After Action Review (AAR). Its 4 questions. What was the goal, what was the intended actions, what actually happened, and what can we learn for next time.</p>
+
+<p>What if we did this for the last 1000 years of scientific discovery. How much time and progress was lost because of a suboptimical policy of mankind. E.g. poor leadership, allocation of resources, and guidance by "the experts" (aka the old guards of academia that refuse to update their priors). </p>
+
+<p>Lets double click into the latter as an example. As Max Planck said: <em>“A new scientific truth does not triumph by convincing its opponents, but rather because its opponents eventually die.”</em> — :contentReference[oaicite:0]{index=0}</p>
+
+<p>How true this is today with the advent of AI. Starting at Stanford in 2012, in the Computer Vision lab of all places, I watched in real time as Fei Fei Li went from: "Deep Learning doesn't work", to "Deep Learning is interesting for a narrow set of problems" to "Deep Learning is only useful for Computer Vision but cant do everything" in the span of 2 years. Which to her and Chris Manning's credit, were "relatively early" on the DL train. But even now, 13 years after AlexNet, Stanford professors are still shunning DL. A famous Optimization professor actually said to me a few months ago: "Francois, people are talking about using Deep Learning for end-to-end self driving cars and planes. This is absolutely crazy. This is solved. Its called Real-time Convex Optimization." Did not have the will to argue that if its so solved, why am I driving my car to work still. And last I checked humans (a deep learning system) are still the only ones the FAA let fly planes. </p>
+
+<p>And this has a direct negative effect on scientific progress. The oldest quartile's inability to update priors (in expectation) results in a large filter lag for scientific discovery. Research is led and funded by those people or people who listen to those people. And those people have no first hand experience in training deep learning models. They should have the George Washington humilty to say, hmm maybe I should step aside and let someone else run with this now. Or maybe we should do as Mckinsey and Deloitte do, and mandate 65 yo retirement ages or earlier. </p>
+
+<p>Having just done my first regret optimization proof I want to map our current scientific discovery engine to an optimization procedure to help think about what increases noise in scientific discovery, what decreases noise, what slows descent, and what increases it. Lets see how I do. </p>
+<nav>
+  <p><strong>Contents</strong> — <a href="#definitions">Definitions</a> · <a href="#error">Bias & Variance</a> · <a href="#case-studies">Case Studies</a> · <a href="#regret">Regret Estimates</a> · <a href="#policy">Policy Levers</a> · <a href="#aar">AAR 1910-2025</a> · <a href="#forward">Forward Path</a></p>
+</nav>
+
+<!-- =============================================================== -->
+<h2 id="definitions">1 Definitions (ML notation ↔ Innovation)</h2>
+
+<p>
+  Let <span style="white-space:nowrap;">π<sub>t</sub></span> be the <strong>policy</strong>—our sociotechnical “solver” consisting of grant agencies, corporate labs, review boards, and cultural norms that decides how we update knowledge.<br>
+  Let <span style="white-space:nowrap;">x<sub>t</sub></span> be the state of humanity’s scientific model in year <t>t</t>.<br>
+  Let <span style="white-space:nowrap;">g<sub>t</sub></span> be the information gradient at <t>t</t> (data, experiments, crises, incentives).<br>
+  The update rule is <span style="white-space:nowrap;">x<sub>t+1</sub> = π<sub>t</sub>(x<sub>t</sub>, g<sub>t</sub>)</span>.</p>
+
+<p>
+  Cumulative regret after T years is
+  <span style="white-space:nowrap;">R<sub>T</sub> = ∑<sub>t=1</sub><sup>T</sup>[f<sub>t</sub>(x<sub>t</sub>) − f<sub>t</sub>(x<sup>*</sup>)]</span>,
+  where f<sub>t</sub> measures loss to humanity (disease burden, wasted energy, unmet curiosity) and x<sup>*</sup> is the best fixed state physically reachable with existing resources.
+</p>
+
+<!-- =============================================================== -->
+<h2 id="error">2 Bias & Variance in Scientific Progress</h2>
+
+<p>
+<strong>Bias (term ∝ diameter):</strong> chasing the <em>wrong vector</em>—phlogiston, Lamarckism, GOFAI. Entrenched dogma widens the gap -- our starting point is far from x<sup>*</sup>.</p>
+
+<p>
+<strong>Variance (term ∝ η·σ<sup>2</sup>):</strong> funding winters, ideological purges, world wars. High-variance gradients thrash the search, slowing convergence.</p>
+
+<p>
+<strong>Step-size η:</strong> peer-review latency, conservative tenure, or hype bubbles. Too small ⇒ stagnation; too large ⇒ reckless bubbles and crashes.</p>
+
+<p>
+Max Planck’s “funeral” resets priors; empirical evidence shows outsider citations surge 8-10 % when an eminent scientist dies :contentReference[oaicite:1]{index=1}.</p>
+
+<!-- =============================================================== -->
+<h2 id="case-studies">3 Case Studies (Gradient Snapshots)</h2>
+
+<h3>3.1 Tycho Brahe → Kepler → Newton</h3>
+<p>
+A Danish king gifted Brahe the island of Hven plus taxes to run a private observatory; Kepler mined that data to discover his laws, paving the way for Newtonian gravity :contentReference[oaicite:2]{index=2}.</p>
+
+<h3>3.2 Shannon at Bell Labs</h3>
+<p>
+A corporate lab with slack capital birthed the bit and information theory in 1948—no immediate product needed :contentReference[oaicite:3]{index=3}.</p>
+
+<h3>3.3 Gosset (“Student”) at Guinness</h3>
+<p>
+Quality-control in beer required small-sample inference; the Student-t test emerged inside industry, not academia :contentReference[oaicite:4]{index=4}.</p>
+
+<h3>3.4 LeCun’s CNN ASIC (1989-93)</h3>
+<p>
+AT&amp;T Bell Labs funded the first convolutional-net hardware for zip-code reading—long before ImageNet fame :contentReference[oaicite:5]{index=5}.</p>
+
+<h3>3.5 AI Winter (1973-86)</h3>
+<p>
+DARPA cuts and the Lighthill report froze U.S./UK AI budgets, flipping the progress vector for ~13 years :contentReference[oaicite:6]{index=6}.</p>
+
+<!-- =============================================================== -->
+<h2 id="regret">4 Back-of-the-Envelope Regret Estimates</h2>
+
+<table border="1" cellpadding="6">
+  <thead><tr><th>Era</th><th>Missed Tech</th><th>Years Lost</th><th>Regret Proxy</th></tr></thead>
+  <tbody>
+    <tr><td>1910-1940</td><td>Electrified statistics & GPUs</td><td>≈ 80</td><td>Delayed ML-guided drug discovery; millions of excess deaths (e.g., penicillin scalability)</td></tr>
+    <tr><td>1973-1986</td><td>Deep Learning</td><td>13</td><td>Perception systems, speech, and robotics deferred</td></tr>
+    <tr><td>1990-2005</td><td>Genomics-to-Therapy Loop</td><td>15</td><td>CRISPR & mRNA platforms arrived a decade late</td></tr>
+  </tbody>
+</table>
+
+<!-- =============================================================== -->
+<h2 id="policy">5 Policy Levers to Minimize Future Regret</h2>
+
+<p><strong>Portfolio diversification:</strong> dedicate ~30 % of federal R&amp;D to uncorrelated “crazy bets,” echoing findings that diverse project portfolios spur novel trajectories :contentReference[oaicite:7]{index=7}.</p>
+
+<p><strong>Sunset tenure:</strong> emulate the beneficial “funeral regularizer” without actual funerals; grant cycles <em>must</em> retire stale priors.</p>
+
+<p><strong>Compute vouchers &amp; open benchmarks:</strong> cheapen high-variance experiments—variance you can afford doesn’t punish regret.</p>
+
+<p><strong>Prediction-market-guided grants:</strong> crowd-source priors to align the gradient direction early.</p>
+
+<p><strong>Cross-sector sabbaticals:</strong> rotate academics ↔ startups ↔ government every 5 years; share priors, lower bias.</p>
+
+<!-- =============================================================== -->
+<h2 id="aar">6 After-Action Review (1910-2025)</h2>
+
+<p>
+<ul>
+  <li><strong>Bias:</strong> over-valuing deductive elegance delayed acceptance of empirical scaling laws.</li>
+  <li><strong>Variance:</strong> wars & funding whiplash created noisy, discontinuous updates.</li>
+  <li><strong>Step-size:</strong> oscillated from too small (grant conservatism) to too large (AI bubbles).</li>
+  <li><strong>Regularization:</strong> mortality kept paradigms from calcifying, but rising life expectancy lengthens “cool-down” time.</li>
+</ul>
+</p>
+
+<!-- =============================================================== -->
+<h2 id="forward">7 Forward Path</h2>
+
+<p>
+Treat humanity’s knowledge search as mirror descent with adaptive step-sizes. Lower gradient noise via open data, but keep enough exploration noise to evade local minima. Decouple R&amp;D budgets from short election cycles—our optimizer needs momentum, not whiplash.</p>
+
+<p>Do this right and the regret curve <em>R<sub>T</sub></em> finally bends sub-linear: average loss per year trends toward zero.</p>
+
+<p style="text-align:center;"><a href="#top">↑ Back to top</a></p>
+
+
+
+
+
+
+
+<h3>Return <a href="./index.html">Home</a></h3>
+
+
+
+</body>
+</html>
