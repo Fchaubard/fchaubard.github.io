@@ -14,115 +14,134 @@
 
 <p>What if we did this for the last 1000 years of scientific discovery. How much time and progress was lost because of a suboptimical policy of mankind. E.g. poor leadership, allocation of resources, and guidance by "the experts" (aka the old guards of academia that refuse to update their priors). </p>
 
-<p>Lets double click into the latter as an example. As Max Planck said: <em>“A new scientific truth does not triumph by convincing its opponents, but rather because its opponents eventually die.”</em> — :contentReference[oaicite:0]{index=0}</p>
+<p>Lets double click into the latter as an example. As Max Planck said: <em>“A new scientific truth does not triumph by convincing its opponents, but rather because its opponents eventually die.”</em> </p>
 
-<p>How true this is today with the advent of AI. Starting at Stanford in 2012, in the Computer Vision lab of all places, I watched in real time as Fei Fei Li went from: "Deep Learning doesn't work", to "Deep Learning is interesting for a narrow set of problems" to "Deep Learning is only useful for Computer Vision but cant do everything" in the span of 2 years. Which to her and Chris Manning's credit, were "relatively early" on the DL train. But even now, 13 years after AlexNet, Stanford professors are still shunning DL. A famous Optimization professor actually said to me a few months ago: "Francois, people are talking about using Deep Learning for end-to-end self driving cars and planes. This is absolutely crazy. This is solved. Its called Real-time Convex Optimization." Did not have the will to argue that if its so solved, why am I driving my car to work still. And last I checked humans (a deep learning system) are still the only ones the FAA let fly planes. </p>
+<p>Scientist funerals literally reset priors; empirical evidence shows outsider citations surge 8-10 % when an eminent scientist dies! Thats crazy.</p>
+  
+<p>How true this is this today with the shift in trends of AI from certificates, global optimality, and rigorous proofs to empericism, scaling laws, and "trying things to see what works". Starting at Stanford in 2012, in the Computer Vision lab of all places, I watched in real time as Fei Fei Li went from: "Deep Learning doesn't work", to "Deep Learning is interesting for a narrow set of problems" to "Deep Learning is only useful for Computer Vision but cant do everything" in the span of 2 years. Which to her and Chris Manning's credit, were "relatively early" on the DL train. But even now, 13 years after AlexNet, Stanford professors are still shunning DL. A famous Optimization professor actually said to me a few months ago: "Francois, people are talking about using Deep Learning for end-to-end self driving cars and planes. This is absolutely crazy. This is solved. Its called Real-time Convex Optimization." Did not have the will to argue that if its so solved, why am I driving my car to work still. And last I checked humans (a deep learning system) are still the only ones the FAA let fly planes. </p>
 
 <p>And this has a direct negative effect on scientific progress. The oldest quartile's inability to update priors (in expectation) results in a large filter lag for scientific discovery. Research is led and funded by those people or people who listen to those people. And those people have no first hand experience in training deep learning models. They should have the George Washington humilty to say, hmm maybe I should step aside and let someone else run with this now. Or maybe we should do as Mckinsey and Deloitte do, and mandate 65 yo retirement ages or earlier. </p>
 
 <p>Having just done my first regret optimization proof I want to map our current scientific discovery engine to an optimization procedure to help think about what increases noise in scientific discovery, what decreases noise, what slows descent, and what increases it. Lets see how I do. </p>
-<nav>
-  <p><strong>Contents</strong> — <a href="#definitions">Definitions</a> · <a href="#error">Bias & Variance</a> · <a href="#case-studies">Case Studies</a> · <a href="#regret">Regret Estimates</a> · <a href="#policy">Policy Levers</a> · <a href="#aar">AAR 1910-2025</a> · <a href="#forward">Forward Path</a></p>
-</nav>
 
 <!-- =============================================================== -->
 <h2 id="definitions">1 Definitions (ML notation ↔ Innovation)</h2>
 
 <p>
-  Let <span style="white-space:nowrap;">π<sub>t</sub></span> be the <strong>policy</strong>—our sociotechnical “solver” consisting of grant agencies, corporate labs, review boards, and cultural norms that decides how we update knowledge.<br>
-  Let <span style="white-space:nowrap;">x<sub>t</sub></span> be the state of humanity’s scientific model in year <t>t</t>.<br>
-  Let <span style="white-space:nowrap;">g<sub>t</sub></span> be the information gradient at <t>t</t> (data, experiments, crises, incentives).<br>
+  Let <span style="white-space:nowrap;">π<sub>t</sub></span> be the <strong>policy</strong>, our sociotechnical “solver” consisting of grant agencies, corporate labs, review boards, and cultural norms that decides how we allocate resources (e.g. what ideas get funded and how much).<br>
+  Let <span style="white-space:nowrap;">x<sub>t</sub></span> be the state of humanity's technology in year <t>t</t>.<br>
+  Let <span style="white-space:nowrap;">g<sub>t</sub></span> be the rate of change of humanity's technology at <t>t</t> (how much we are advancing per unit time).<br>
   The update rule is <span style="white-space:nowrap;">x<sub>t+1</sub> = π<sub>t</sub>(x<sub>t</sub>, g<sub>t</sub>)</span>.</p>
 
 <p>
   Cumulative regret after T years is
   <span style="white-space:nowrap;">R<sub>T</sub> = ∑<sub>t=1</sub><sup>T</sup>[f<sub>t</sub>(x<sub>t</sub>) − f<sub>t</sub>(x<sup>*</sup>)]</span>,
-  where f<sub>t</sub> measures loss to humanity (disease burden, wasted energy, unmet curiosity) and x<sup>*</sup> is the best fixed state physically reachable with existing resources.
+  where f<sub>t</sub>(x<sub>t</sub>) quantifies the state of humanity's technology at time t, and f<sub>t</sub>(x<sup>*</sup>) is the best state of humanity's technology possible given existing resources in T time. i.e. Now knowing what is possible (GPUs, iphones, nuclear energy, GPS, vaccines, ChatGPT, Google, Amazon, etc) could we have achieved it faster / earlier? Why could we not have invented all of them 10 years earlier, 100 years earlier, or even 1000 years earlier? Regret will quantify this for us. 
 </p>
 
 <!-- =============================================================== -->
 <h2 id="error">2 Bias & Variance in Scientific Progress</h2>
 
 <p>
-<strong>Bias (term ∝ diameter):</strong> chasing the <em>wrong vector</em>—phlogiston, Lamarckism, GOFAI. Entrenched dogma widens the gap -- our starting point is far from x<sup>*</sup>.</p>
-
+<strong>Bias (term ∝ diameter) and Variance (term ∝ η·σ<sup>2</sup>):</strong> chasing the <em>wrong vector</em>, Lamarckism (experience is inherited) vs. Darwinism (genetics are inherited), Tesla vs. Edison, and Good old fashion AI (GOFAI) vs. Deep Learning. Entrenched dogma strictly increases Regret and just slows us down or even pushes us in the wrong direction. Some can see x<sup>*</sup> but the old guards stop us from getting there to save their ego. This causes either bias or variance, not sure which in this anology. I guess its a function of consistentcy of intransigence of the oldest quartile. lol.. But in either case, High-Bias or High-variance gradients thrash the search, slowing or (in the case of AI winter) stopping convergence.</p>
+  
 <p>
-<strong>Variance (term ∝ η·σ<sup>2</sup>):</strong> funding winters, ideological purges, world wars. High-variance gradients thrash the search, slowing convergence.</p>
+<strong>Step-size η:</strong> Reviewer #2 vibes, funding winters, religion, anti-STEM protests (like what is happening in k-12 education, arguing that "math is racist") all slow down learning rate. And the Apollo missions, NASA in general, industrial revolutions, capitalism, venture capital, silicon valley, DARPA, (unfortunately) WW2, etc. all improved the rate of world's innovation and the learning rate. </p>
 
-<p>
-<strong>Step-size η:</strong> peer-review latency, conservative tenure, or hype bubbles. Too small ⇒ stagnation; too large ⇒ reckless bubbles and crashes.</p>
-
-<p>
-Max Planck’s “funeral” resets priors; empirical evidence shows outsider citations surge 8-10 % when an eminent scientist dies :contentReference[oaicite:1]{index=1}.</p>
-
+<p>It may be fair to argue that the path that was taken WAS optimal, and we had to study Lamarckism to get to Darwinism, which may be true in some cases, you need to get to A to get to B. I am not a biologist, but I am an AI engineer, and in the case of the AI winter, I can not agree, there was no reason to go back to statistical methods and convexity in lieu of deep learning. That was strictly a pause of progress without logic. That slowed down mankind for at least a decade. </p>
+<p>Actually a better example is Black-Scholes. MIT rocket scientists published "The Pricing of Options and Corporate Liabilities" in 1973. They win the Nobel Price in 1993. And still very few are using it! They start their own hedge fund LTCM in 1994. Now almost all options traders use it. But it took 20 years to adopt. Why not 2 years. Why not 2 days. Its due to a limitation of our thinking. We had to wrap our heads around it. And that takes too much time. Are we that dense? Why not go faster? </p>
 <!-- =============================================================== -->
-<h2 id="case-studies">3 Case Studies (Gradient Snapshots)</h2>
+<h2 id="case-studies">3 Examples of root causes of increase and decline in scientific discovery</h2>
 
-<h3>3.1 Tycho Brahe → Kepler → Newton</h3>
+<h3>3.1 The discovery of gravity: Tycho Brahe → Kepler → Newton</h3>
 <p>
-A Danish king gifted Brahe the island of Hven plus taxes to run a private observatory; Kepler mined that data to discover his laws, paving the way for Newtonian gravity :contentReference[oaicite:2]{index=2}.</p>
+A Danish king gifted Brahe the island of Hven plus taxes to run a private observatory; Kepler mined that data to discover his laws, paving the way for Newtonian gravity.</p>
 
 <h3>3.2 Shannon at Bell Labs</h3>
 <p>
-A corporate lab with slack capital birthed the bit and information theory in 1948—no immediate product needed :contentReference[oaicite:3]{index=3}.</p>
+A corporate lab with slack capital birthed the bit and information theory in 1948, no immediate product needed .</p>
 
 <h3>3.3 Gosset (“Student”) at Guinness</h3>
 <p>
-Quality-control in beer required small-sample inference; the Student-t test emerged inside industry, not academia :contentReference[oaicite:4]{index=4}.</p>
+Quality-control in beer required small-sample inference; the Student-t test emerged inside industry, not academia.</p>
 
 <h3>3.4 LeCun’s CNN ASIC (1989-93)</h3>
 <p>
-AT&amp;T Bell Labs funded the first convolutional-net hardware for zip-code reading—long before ImageNet fame :contentReference[oaicite:5]{index=5}.</p>
+AT&amp;T Bell Labs funded the first convolutional-net hardware for zip-code reading, long before ImageNet fame.</p>
 
 <h3>3.5 AI Winter (1973-86)</h3>
 <p>
-DARPA cuts and the Lighthill report froze U.S./UK AI budgets, flipping the progress vector for ~13 years :contentReference[oaicite:6]{index=6}.</p>
-
-<!-- =============================================================== -->
-<h2 id="regret">4 Back-of-the-Envelope Regret Estimates</h2>
-
-<table border="1" cellpadding="6">
-  <thead><tr><th>Era</th><th>Missed Tech</th><th>Years Lost</th><th>Regret Proxy</th></tr></thead>
+DARPA cuts and the Lighthill report froze U.S./UK AI budgets, flipping the progress vector for 10-20 years. Time wasted!</p>
+  
+<table border="1" cellspacing="0" cellpadding="6">
+  <thead>
+    <tr>
+      <th>Wave of “winter”</th>
+      <th>Key decision-maker</th>
+      <th>What they did</th>
+      <th>Impact</th>
+    </tr>
+  </thead>
   <tbody>
-    <tr><td>1910-1940</td><td>Electrified statistics & GPUs</td><td>≈ 80</td><td>Delayed ML-guided drug discovery; millions of excess deaths (e.g., penicillin scalability)</td></tr>
-    <tr><td>1973-1986</td><td>Deep Learning</td><td>13</td><td>Perception systems, speech, and robotics deferred</td></tr>
-    <tr><td>1990-2005</td><td>Genomics-to-Therapy Loop</td><td>15</td><td>CRISPR & mRNA platforms arrived a decade late</td></tr>
+    <tr>
+      <td>1966 (U.S.)</td>
+      <td>John R. Pierce &ndash; Chair, ALPAC panel (Bell Labs)</td>
+      <td>Led the ALPAC report declaring machine-translation progress “disappointing,” recommending withdrawal of large MT system funding.</td>
+      <td>U.S. agencies (DoD, NSF, NIH) cut most MT grants, ushering in the first AI winter.</td>
+      <td>NOTE: The hilarious irony that the Transformer was discovered on the machine translation task! lol</td>
+      
+    </tr>
+    <tr>
+      <td>1973 (U.K.)</td>
+      <td>Sir James Lighthill &ndash; Author, <em>Lighthill Report</em></td>
+      <td>Argued AI had not met its promises; British Science Research Council used the report to terminate nearly all university AI funding.</td>
+      <td>Many U.K. AI labs closed or shrank; senior talent emigrated, deepening the chill.</td>
+    </tr>
+    <tr>
+      <td>1987&ndash;1988 (U.S.)</td>
+      <td>Jack Schwarz &ndash; Director, DARPA&nbsp;IPTO</td>
+      <td>Slashed the Strategic Computing Initiative’s AI budget, calling expert systems “clever programming” unworthy of further investment.</td>
+      <td>Lisp-machine vendors collapsed, venture funding dried up, triggering the second U.S. AI winter.</td>
+    </tr>
   </tbody>
 </table>
 
-<!-- =============================================================== -->
-<h2 id="policy">5 Policy Levers to Minimize Future Regret</h2>
+<p><em>Each of these individuals had direct authority (as advisory chairs or budget controllers) and their decisions rapidly dried up research and commercial investment in AI, leading to prolonged periods of reduced AI activity.</em></p>
 
-<p><strong>Portfolio diversification:</strong> dedicate ~30 % of federal R&amp;D to uncorrelated “crazy bets,” echoing findings that diverse project portfolios spur novel trajectories :contentReference[oaicite:7]{index=7}.</p>
+<h3>3.6 DeepMind/Google Brain</h3>
+<p>
+Similar to AT&amp;T Bell Labs, DeepMind funded by Google, discovered some of the most critical AI research of the past decade.</p>
 
-<p><strong>Sunset tenure:</strong> emulate the beneficial “funeral regularizer” without actual funerals; grant cycles <em>must</em> retire stale priors.</p>
-
-<p><strong>Compute vouchers &amp; open benchmarks:</strong> cheapen high-variance experiments—variance you can afford doesn’t punish regret.</p>
-
-<p><strong>Prediction-market-guided grants:</strong> crowd-source priors to align the gradient direction early.</p>
-
-<p><strong>Cross-sector sabbaticals:</strong> rotate academics ↔ startups ↔ government every 5 years; share priors, lower bias.</p>
+<h3>3.7 OpenAI</h3>
+<p>
+While Google Brain inventory the transformer, Google was under anti-monopoly scrutiny so had zero appetite for commercialization and it was OpenAI that commercialized it.</p>
+  
 
 <!-- =============================================================== -->
-<h2 id="aar">6 After-Action Review (1910-2025)</h2>
+<h2 id="policy">4 Policy Levers to Minimize Future Regret</h2>
+
+<p><strong>Empericism over mathematical rigor:</strong> eliminate requirements for papers to have mathematical rigor. Results are all that matters. Does it work or not. Thats all. No more reviewer #2 BS. </p>
+
+<p><strong>Industry discovers much more than academia per capita / per dollar spent:</strong> It took Bell Labs to invent Information Theory, not every stats/prob/math department. It took Google Brain to invent the transofmrer. Its much more often the case that industry invents vs. academia. And its definitely the case that they commercialize. </p>
+
+<p><strong>Invention without commercialization does not improve humanity:</strong> a paper on arxiv is not the goal. That is a step along the way. The goal is to improve the quality of life for mankind. Perhaps this is why industry is better at research that academia. They are closer to the feedback signal and have a stronger incentive to solve it vs. publish an epsilon paper. </p>
+
+<p><strong>Cut tenure:</strong> emulate the beneficial “funeral regularizer” without actual funerals; NO MORE TENURE! Grant cycles <em>must</em> retire stale priors.</p>
+
+<p><strong>Compute vouchers &amp; open benchmarks inspire innovation:</strong> ImageNet was such a good example of this. The dataset inspires new invention. This cheapens experiments.</p>
+
+<p><strong>Democratic / Prediction-market-guided grants:</strong> just a crazy idea.. there is wisdom in the crowds. Polymarket works for politics. Could it work for research directions? Replacing "the experts" with "crowd-source priors" to align the gradient direction early may be a new way to fund research and get the BS out of academia. It worked for wikipedia. It works for StackOverflow. Why can't it replace PI's, Grant Decision Makers, and conference reviewers. </p>
+
+<p><strong>Cross-sector sabbaticals:</strong> rotate academics ↔ startups ↔ government every 5 years; share priors, lower bias. The mindset difference between gov, academia, and startups is stark. Perhaps mixing things up will assist in the flow of ideas. </p>
+
+<p><strong>Cross-speciality sabbaticals:</strong> Same argument for disciplines. Speaking with people in Physics, Statistics, Finance, and Medicine is like going back in the stone age. They have so little understanding of what Deep Learning is, and how beneficial it can be for their discipine. The more mixing things up the better. </p>
+
+<!-- =============================================================== -->
+<h2 id="forward">6 Forward Path</h2>
 
 <p>
-<ul>
-  <li><strong>Bias:</strong> over-valuing deductive elegance delayed acceptance of empirical scaling laws.</li>
-  <li><strong>Variance:</strong> wars & funding whiplash created noisy, discontinuous updates.</li>
-  <li><strong>Step-size:</strong> oscillated from too small (grant conservatism) to too large (AI bubbles).</li>
-  <li><strong>Regularization:</strong> mortality kept paradigms from calcifying, but rising life expectancy lengthens “cool-down” time.</li>
-</ul>
-</p>
-
-<!-- =============================================================== -->
-<h2 id="forward">7 Forward Path</h2>
-
-<p>
-Treat humanity’s knowledge search as mirror descent with adaptive step-sizes. Lower gradient noise via open data, but keep enough exploration noise to evade local minima. Decouple R&amp;D budgets from short election cycles—our optimizer needs momentum, not whiplash.</p>
-
-<p>Do this right and the regret curve <em>R<sub>T</sub></em> finally bends sub-linear: average loss per year trends toward zero.</p>
-
+Looking back on the last 1000 years and what empowered and what inhibited scientific discovery can help guide us to improving scientific discovery per unit time, per dollar, per capita. My conclusion is the famous charlie munger quote "Show me the incentive, I will show you the outcome".  Academia, the experts with tenure, reviewer #2 all have no incentive to take big swings, go against the grain, and improve mankind. The tallest blade of grass is the first to be cut. And what if you are wrong? You are out! So just be quite, be happy, get invited to the white house, and never shake the tree that hard. Vs. industry who has clear incentive to shake things up. Startups who definitely have incentive to improve the status quo. These are all better systems than academia. If I had to bet on who will invent the future, a tenured professor or a startup, I would bet on the latter everyday. With this in mind, forget getting rid of tenure, what would really happen if we got rid of academic research entirely. Should we shift funding from academia to startups directly? Hmm.. I guess this is already happening bc every professor at Stanford has their own startup or two so they can innovate without the pressures and disincentives of academia.</p>
+  
 <p style="text-align:center;"><a href="#top">↑ Back to top</a></p>
 
 
