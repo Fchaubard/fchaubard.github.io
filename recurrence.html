@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>(Train Time) Recurrence as a necessary condition for General Intelligence
+</title>
+</head>
+<body>
+  <h1>(Train Time) Recurrence as a necessary condition for General Intelligence</h1>
+
+  
+
+<p>  A necessary condition of a turing machine is “unbounded recurrence/iterations”. The program needs to be able to call itself as many times as it wants. LLMs / diffusion models are said to be “Turing Complete” [<a href="https://medium.com/heyjobs-tech/turing-completeness-of-llms-d38b5e7bf795">1</a>]. However, this is <b>only</b> true at test time, NOT during training. To be turing complete, you must enable infinite recursion and this is not possible in one foreward pass of the model as is done during training. To make this work at all, we need to provide the intermediary goal states to achieve (CoT for LLMs, and a bit denoised noisy input for diffusion). However, this is very limiting. We train it this way and then cross our fingers and hope that the non-recurrent model can be called in while true loop and will be turing complete. Lets call this method teacher forcing recurrence. 
+</p>
+  
+  <p> To do "teacher forcing recurrence", your task needs to be 1) decomposable into intermediary steps explicitly (snapped into token space), and 2) you need to train it on pre-existing reasoning traces w known intermediary results. If both are not true, more inference will provide no value. And it wont ever work. e.g. if its a problem where we dont know the intermediary results/decomposition? or worse we dont even know the final answer? or, the intermediary results are not decomposable into "discrete tokens" (e.g. visual simulation is better than text toks)? in all cases this "smearing" over token space wont save you, no matter how much you train or test time infer. Thinking of Ramanujan's "god gave me the answer" where he couldnt explain where the answer came from. How to train it to think like this? How to solve any of the millinium prize problems? Whats the trace? To get the rest of the way there, we need to make distinct problem classes that highlight these issues with current architectures / training techniques so we can try out new ones on tiny subproblems per class and once we get some working, then worry about scale up. Like learning simple things like rolling sum, sin, sort, copy, DFS, BFS, factorial, all the CLRS algos, etc etc.. non-compressible sequential problems. </p>
+
+  <p> I have heard specious arguments that RL against enough programs, and lean proofs and we will get there.. But intelligence was not created on earth by training on a bunch of lean proofs.. In fact the opposite! The lean proofs were created BY THE INTELLIGENCE! So what process/training procedure/architecture created the intelligence? </p>
+
+  <p>
+    You need to let the model recurse as many times as it wants during training and you should not force it to do so only once or tell it what each intermediary state should be. This is just too limiting. A clear way to describe this is "adaptive compute time in latent space" (could be continuous latents or a codebook, either way). And IMO is a necessary architecture feature to get the rest of the way there.
+  </p>
+  
+  <p> Another way to look at this is boosting. We let the model take in previous outputs of itself and try to improve upon it. This is using the correct input to the model in both cases as at test time, this is what will really happen, and is the inductive bias we are looking for. We need recurrence <i>embedded</i> into the architecture itself and train it to be a turing machine, not turn a Non-turing machine into a turing machine with a white true loop. 
+</p> 
+<p> Our brain is massively ‘loopy’ / recurrent and that is embedded into the architecture itself, in both “inner loops” (microcircuits) and big “outer loops” (2 lobes). This is not a random detail that we can circumnavigate and still achieve nice things. Going “bigger” will not solve this (perhaps theoretically, but not realistically).  
+</p>
+<p> We just need the algo to train it. 
+</p>
+
+<p>
+  What are some candidates to enable this train time recurrence? 
+</p>
+  <ol>
+    <li>HRM: Some magic has been proven with this paper. They can do TBPTT with T=1 and somehow nice things happen. Can't believe it. Very similar to my SLN (Strange Loop Networks actually). There must be a few scaling laws with this paper. Scaling in Nmax. Scaling in number of frequencies maybe? Scaling in model size. Etc. The only thing I dont like about this paper is there is no "search" at test time. You want that embedded into the architecture. Side note: If TBPTT @ T=1 works for reasoning, it should work for diffusion too. Diffusion only iterates once on theta before incurring loss. Perhaps, we should enable do the same training procedure but allow N ponder steps sampled between Nmin and Nmax for diffusion/flow matching as well! Training not from random noised up images but from the biased sampling of the model. never heard of training image/video gen like that. Should work! </li>
+    <li>Zero Order: like SPSA or otherwise. </li>
+    <li>Mix of both?</li>
+  </ol>
+<p> Conclusion: Stacked Transformers + CoT scaling test-time tokens is just not the right inductive bias: they still struggle to remember what matters which is why they dont work well in long horizon tasks, they can not perform induction, and despite all that, they require a disgusting amount of memory/compute. We need to refocus toward architectures with embedded recurrence. This is the cleanest path to reliable AGI. 
+</p>
+  
+
+
+
+
+    <h3><a href="./index.html">Return Home</a></h3>
+</body>
+</html>
