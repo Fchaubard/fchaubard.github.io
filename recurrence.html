@@ -39,7 +39,7 @@
 </p>
   <ol>
     <li>HRM (Hierarchical Reasoning Model): Some magic has been proven with this paper. I think this is more important than ppl think. They prove you can do recurrence at train time and teach it with just TBPTT with T=1 and somehow nice things happen?? Can't believe it but its true. Very similar to my SLN (Strange Loop Networks actually) but they got it to train. There must be a few scaling laws with this paper unexplored as of yet. Scaling Nmax. Scaling number of frequencies maybe? Scaling model size. Scaling iters. Etc. The only thing I dont like about this paper is there is no "search" at test time. So needs a "world model" and the policy needs to invoke it during training. You want that embedded into the architecture. Side note: If TBPTT @ T=1 works for reasoning, it should work for diffusion too. Diffusion only iterates once on theta before incurring loss. Perhaps, we should enable do the same training procedure but allow N ponder steps sampled between Nmin and Nmax for diffusion/flow matching as well! Training not from random noised up images but from the biased sampling of the model. never heard of training image/video gen like that. Should work! There will be many papers doing this with diffusion/flow matching soon and it will work meaningfully better with higher accuracy and MUCH shorter denoising steps for image generation/video generation/diffusion policy/etc. </li>
-    <li>Zero Order: like SPSA or otherwise. Obviously... :) </li>
+    <li>RNNs + Zero Order training: like SPSA or otherwise. Obviously... :) </li>
     <li>Mix of both?</li>
   </ol>
 <p>
