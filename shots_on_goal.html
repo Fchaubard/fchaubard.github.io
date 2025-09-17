@@ -74,7 +74,38 @@
 </ol> 
 
 
-  
+
+<h2>3)Schmidhuber-ism: Gödel Machine (from Jürgen Schmidhuber): the provably optimal recursively self-improving agent</h2> 
+<h3>What it is</h3> 
+<p>A self-referential, self-improving agent that searches for formal proofs that rewriting its own code will increase expected utility, and only then rewrites. It’s about optimal self-modification under provable improvement.</p> 
+<ol> 
+<li>Primary sources: <a href="https://arxiv.org/abs/cs/0309048">Schmidhuber, 2003 (Gödel Machine)</a>, <a href="https://people.idsia.ch/~juergen/goedelmachine.html">Overview page</a></li> 
+</ol> 
+<h3>Why it could work</h3> 
+<ol> 
+<li>Provides a theoretical framework for safe and provably beneficial self-modification.</li> 
+<li>Ensures that rewrites cannot make the agent worse according to its own utility function.</li> 
+<li>Aligns with the long-term need for recursive self-improvement in ASI.</li> 
+</ol> 
+<h3>Why it might fail</h3> 
+<ol> 
+<li>Proof search is extremely expensive; full generality is impractical.</li> 
+<li>Requires specifying utility functions and axioms up front in a formal system, which is a major unsolved challenge.</li> 
+<li>No large-scale practical demonstrations to date.</li> 
+</ol> 
+<h3>How to train</h3> 
+<ol> 
+<li>Start with constrained domains (toy languages, theorem provers) where proof search is tractable.</li> 
+<li>Use meta-learning or automated theorem proving to guide proof discovery for code modifications.</li> 
+<li>Incorporate techniques from proof-carrying code and verifiable RL for practical approximations.</li> 
+</ol> 
+<h3>Architecture</h3> 
+<ol> 
+<li>Base agent with policy and utility function formalized in axioms.</li> 
+<li>Meta-level proof searcher that looks for candidate self-modifications.</li> 
+<li>Self-modification executor that commits rewrites once a proof of utility gain is found.</li> 
+</ol> 
+
 <h2>4) Sutton-ism: and the OaK Architecture; Reward Is Enough</h2> 
 <h3>What it is</h3> 
 <p>In sufficiently rich environments, maximizing reward yields the competencies associated with intelligence. AlphaGo, AlphaZero, and successors demonstrate emergence via self-play and planning.</p> 
@@ -262,27 +293,36 @@
 <li>Probabilistic generative world model for states, transitions, and observations, paired with a policy that minimizes expected free energy.</li> 
 </ol> 
 
-  
-<h2>11) Schmidhuber-ism: the AIXI and Gödel Machines</h2> 
-<h3>What they are</h3> 
-<p>AIXI is an incomputable optimal Bayesian RL agent over all computable environments. The Gödel Machine is a self-referential agent that rewrites its own code only when it can prove the rewrite improves expected utility.</p> 
+<h2>11. AIXI (Hutter-ism): the idealized Bayesian RL agent</h2> 
+<h3>What it is</h3> 
+<p>An idealized reinforcement learning agent that does Bayesian prediction over all computable environments (Solomonoff induction) and plans by expectimax. It’s about optimal prediction and control under a universal prior.</p> 
 <ol> 
-<li>Primary sources: <a href="https://hutter1.net/ai/suaibook.pdf">Hutter, Universal Artificial Intelligence (book)</a>, <a href="https://hutter1.net/publ/uaibook2.pdf">UAI Intro</a>, <a href="https://arxiv.org/abs/cs/0309048">Schmidhuber, Gödel Machine (2003)</a>, <a href="https://people.idsia.ch/~juergen/goedelmachine.html">Gödel Machine overview</a></li> 
+<li>Primary sources: <a href="https://hutter1.net/ai/uaibook.htm">Universal Artificial Intelligence (Hutter, 2005)</a>, <a href="https://arxiv.org/abs/2004.08180">AIXI: A Survey (Leike & Hutter, 2015)</a></li> 
 </ol> 
-<h3>Why they matter</h3> 
+<h3>Why it could work</h3> 
 <ol> 
-<li>Provide theoretical targets and inform approximations to optimal agents and safe self-improvement.</li> 
+<li>Defines an optimal agent in a very general sense: decision-making across any computable environment.</li> 
+<li>Provides a rigorous mathematical north star for approximations.</li> 
+<li>Has inspired bounded variants such as AIXI<sub>tl</sub> and MC-AIXI-CTW.</li> 
 </ol> 
-<h3>Limits</h3> 
+<h3>Why it might fail</h3> 
 <ol> 
-<li>Incomputable or intractable in full generality; practical systems must approximate and sacrifice guarantees.</li> 
+<li>Incomputable in full generality; only approximations are feasible.</li> 
+<li>Universal prior assumptions are uncomputable and unrealistic in practice.</li> 
+<li>Still requires reward specification, which remains a bottleneck.</li> 
 </ol> 
-<h3>Training and architecture</h3> 
+<h3>How to train</h3> 
 <ol> 
-<li>Approximate Solomonoff priors via strong learned world models and meta-learning.</li> 
-<li>Safety via verifier layers such as proof search and unit tests before self-modification.</li> 
+<li>Approximate Solomonoff induction using compression-based priors or powerful learned world models.</li> 
+<li>Benchmark with environments requiring generalization and planning, e.g., gridworlds, Atari, or NetHack, then scale up.</li> 
+<li>Combine Bayesian model averaging with tractable Monte Carlo search approximations.</li> 
 </ol> 
-
+<h3>Architecture</h3> 
+<ol> 
+<li>World model: approximated universal prior (compression models, learned dynamics).</li> 
+<li>Planner: bounded expectimax search over possible futures.</li> 
+<li>Policy: action chosen to maximize expected reward under model distribution.</li> 
+</ol> 
 
   
 <h2>12) Goertzel-ism: Cognitive architectures and knowledge graphs</h2> 
