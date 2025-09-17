@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Shots on Goal: What are the hypothesized paths to AGI and which ones are the most promising</title>
+</head>
+<body>
+
+  
+<h1>Shots on Goal: What are the hypothesized paths to AGI and which ones are the most promising</h1>
+<p>Recently, I have been overwhelmed by the floodgates of research, opinions, blog posts, and discussions on AGI. Its non-stop. Its important to take in some of it, to reassess, update your priors, and change direction, but taking in even 1% will result in you switching directions every week or so. Instead, went I ventured to do with this post is take a BIG step back and assemble all of the "credible" (at least to me), actively pursued theories for getting from current levels of AI to full AGI/ASI. For each approach you’ll find: a short description, why advocates think it will work, where I think it may fall short, a rough training recipe for how it could work, an architecture sketch, and primary links from the authors or original teams plus recent papers that show progress. Enjoy!</p> 
+
+  
+<h2>1) "NTP is Enough" (Originally Ilya Sutskever): keep pushing stacked transformers, next-token prediction and backprop to the limit, then add test-time reasoning</h2> 
+<h3>What it is</h3> 
+<p>We have EMPERICALLY measured that capability improves as we scale parameters, tokens, and compute with a power-law (i.e. the scaling laws). Recently, we have also discovered that adding heavy test-time thinking improves reasoning and competence as well.</p> 
+<ol> 
+<li>Primary sources: <a href="https://arxiv.org/abs/2001.08361">Scaling Laws (Kaplan et al., 2020)</a>, <a href="https://arxiv.org/abs/2203.15556">Chinchilla (Hoffmann et al., 2022)</a>, <a href="https://openai.com/index/introducing-openai-o1-preview/">OpenAI o1 blog</a>, <a href="https://openai.com/index/learning-to-reason-with-llms/">Learning to Reason with LLMs</a></li> 
+</ol> 
+<h3>Why it could work</h3> 
+<ol> 
+<li>Scaling curves have been broadly predictive across tasks.</li> 
+<li>Compute-optimal regimes reduce undertraining by increasing tokens.</li> 
+<li>Test-time search, tool use, and judge models can convert prediction into reasoning.</li> 
+</ol> 
+<h3>Why it might fail</h3> 
+<ol> 
+<li>Diminishing returns for systematic generalization and causal reasoning.</li> 
+<li>Data quality, coverage, and cost become bottlenecks.</li> 
+<li>Reliability and alignment issues are not solved by scale alone.</li> 
+<li>Even the largest models get very poor performance on ARC2 today.</li> 
+<li>With the highly anticipated and underwhelming launch of GPT5, despite billions of investment, I think its safe to say that this path is dead.</li> 
+</ol> 
+<h3>How to train</h3> 
+<ol> 
+<li>Pretrain on large, deduplicated, filtered web, books, code, math, and scientific corpora at Chinchilla-optimal token counts.</li> 
+<li>Reasoning fine-tunes on math sets such as GSM8K and MATH, code sets such as HumanEval and MBPP, and synthetic multi-step curricula with tool traces.</li> 
+<li>At inference, use multi-sample self-consistency, retrieval, external tools, and verifier-guided reranking.</li> 
+</ol> 
+<h3>Architecture</h3> 
+<ol> 
+<li>Large decoder-only transformer with retrieval plug-ins and tool APIs.</li> 
+<li>Separate or shared verifier/judge model to score candidate solutions.</li> 
+<li>Optional controller that allocates test-time compute for hard problems.</li> 
+</ol> 
+
+
+  
+<h2>2) Lecun-ism: World-models and self-supervised predictive learning</h2> 
+<h3>What it is</h3> 
+<p>LeCun’s JEPA-based roadmap posits configurable predictive world models with intrinsic motivation and hierarchical planning. Recent work includes masked and multi-context JEPAs.</p> 
+<ol> 
+<li>Primary sources: <a href="https://openreview.net/pdf?id=BZ5a1r-kVsf">A Path Towards Autonomous Machine Intelligence (LeCun, 2022)</a>, <a href="https://arxiv.org/abs/2307.12698">MC-JEPA (Assran et al., 2023)</a></li> 
+</ol> 
+<h3>Why it could work</h3> 
+<ol> 
+<li>Predictive latent state supports planning, sample efficiency, and common sense.</li> 
+<li>Self-supervision avoids sparse rewards and expensive labels.</li> 
+</ol> 
+<h3>Why it might fail</h3> 
+<ol> 
+<li>Scaling stability and head-to-head benchmarks versus frontier LLMs are still developing.</li> 
+<li>Bridging to long-horizon tool use and action remains challenging.</li> 
+</ol> 
+<h3>How to train</h3> 
+<ol> 
+<li>Pretrain world models on egocentric video, proprioception, and audio (for example Ego4D), plus synthetic physics video.</li> 
+<li>Finetune for robotics and embodied QA using model-based RL over latent rollouts.</li> 
+</ol> 
+<h3>Architecture</h3> 
+<ol> 
+<li>Encoders produce object-centric or scene latents.</li> 
+<li>Predictor forecasts future latents under actions; planner searches in latent space with intrinsic objectives.</li> 
+</ol> 
+
+
+  
+<h2>4) Sutton-ism: and the OaK Architecture; Reward Is Enough</h2> 
+<h3>What it is</h3> 
+<p>In sufficiently rich environments, maximizing reward yields the competencies associated with intelligence. AlphaGo, AlphaZero, and successors demonstrate emergence via self-play and planning.</p> 
+<ol> 
+<li>Primary sources: <a href="https://www.sciencedirect.com/science/article/pii/S0004370221000862">Reward Is Enough (Silver, Singh, Precup, Sutton, 2021)</a>, <a href="https://www.nature.com/articles/nature16961">AlphaGo (Nature, 2016)</a></li> 
+</ol> 
+<h3>Why it could work</h3> 
+<ol> 
+<li>Self-play and search can bootstrap powerful planning and abstraction.</li> 
+<li>Single objective and domain-agnostic learning principle.</li> 
+</ol> 
+<h3>Why it might fail</h3> 
+<ol> 
+<li>Reward misspecification, sparse credit assignment, and sample complexity.</li> 
+<li>Sim-to-real transfer and safety oversight are hard at scale.</li> 
+</ol> 
+<h3>How to train</h3> 
+<ol> 
+<li>Open-ended multi-task worlds such as NetHack, MineRL, and XLand with curricula and self-play.</li> 
+<li>Use model-based RL with latent dynamics and verifier-guided planning for complex reasoning goals.</li> 
+</ol> 
+<h3>Architecture</h3> 
+<ol> 
+<li>Actor-critic or MuZero-style policy and value networks.</li> 
+<li>Search over actions with learned or explicit dynamics models.</li> 
+</ol> 
+
+
+  
+<h2>5) Noam-ism: Generator–Verifier gap (tweak of 1 but worth the mention) </h2> 
+<h3>What it is</h3> 
+<p>Exploit domains where verification is easier than generation by pushing inference-time search and strong verifiers or judges. Noam Brown has articulated this path in recent talks.</p> 
+<ol> 
+<li>Primary sources: <a href="https://www.youtube.com/watch?v=eaAonE58sLU">Noam Brown public talk</a></li> 
+<li>Supporting research: <a href="https://arxiv.org/abs/2203.11171">Self-Consistency (Wang et al., 2022)</a>, <a href="https://arxiv.org/abs/1805.00899">AI Safety via Debate (Irving et al., 2018)</a>, <a href="https://arxiv.org/abs/2210.03629">ReAct (Yao et al., 2022)</a>, <a href="https://arxiv.org/abs/2302.04761">Toolformer (Schick et al., 2023)</a>, <a href="https://arxiv.org/abs/2306.05685">LLM-as-a-Judge (Zheng et al., 2023)</a></li> 
+</ol> 
+<h3>Why it could work</h3> 
+<ol> 
+<li>Mirrors AlphaZero’s proposal-and-evaluation loop with scalable verifiers.</li> 
+<li>Unit tests, compilers, and proof checkers provide crisp signals.</li> 
+</ol> 
+<h3>Why it might fail</h3> 
+<ol> 
+<li>Many real-world tasks lack crisp verifiers; inference compute can be large.</li> 
+</ol> 
+<h3>How to train</h3> 
+<ol> 
+<li>Collect triplets of problem, candidate, and verdict across math, code, theorem proving, and structured QA.</li> 
+<li>Train verifiers on labeled refutations and formal tests; at inference, sample many candidates and rerank with verifiers and judges.</li> 
+</ol> 
+<h3>Architecture</h3> 
+<ol> 
+<li>Generator LLM plus formal verifiers such as unit tests and proof assistants.</li> 
+<li>Learned judge models to arbitrate where formal checks are absent.</li> 
+</ol> 
+
+
+  
+<h2>6) Chollet-ism: Program synthesis and neurosymbolic methods</h2> 
+<h3>What it is</h3> 
+<p>Target compositional abstraction via program search guided by neural priors. Chollet’s ARC measure focuses on generalization and skill acquisition efficiency. DreamCoder demonstrates wake-sleep library learning and neural proposal for program synthesis.</p> 
+<ol> 
+<li>Primary sources: <a href="https://arxiv.org/abs/1911.01547">On the Measure of Intelligence (Chollet, 2019)</a>, <a href="https://arcprize.org/arc-agi">ARC Prize page</a>, <a href="https://www.neurosymbolic.org/papers/EllisWNSMHCST21.pdf">DreamCoder (Ellis et al., 2021)</a></li> 
+</ol> 
+<h3>Why it could work</h3> 
+<ol> 
+<li>Programs naturally support compositionality, systematic generalization, and verifiability.</li> 
+<li>Neural hints and learned libraries make search more tractable.</li> 
+</ol> 
+<h3>Why it might fail</h3> 
+<ol> 
+<li>Search combinatorics and perception-to-symbol pipelines remain difficult.</li> 
+</ol> 
+<h3>How to train</h3> 
+<ol> 
+<li>Mix ARC-style puzzles, DSL corpora, code tasks with unit tests, and mini-proof sets.</li> 
+<li>Alternate solving new tasks with expanding reusable library primitives and retraining the neural proposer.</li> 
+</ol> 
+<h3>Architecture</h3> 
+<ol> 
+<li>Neural proposer such as a transformer, a symbolic DSL and library, and a verifier comprising unit tests or proof tools.</li> 
+</ol> 
+
+
+  
+<h2>7) Bengio-ism: System-2 and causality-aware deep learning</h2> 
+<h3>What it is</h3> 
+<p>Add explicit variables, structured search over objects, and causal representation learning. GFlowNets learn to sample diverse high-reward objects such as molecules. Causal representation learning seeks to discover and manipulate underlying factors. Pearl and Schölkopf provide the causal foundations.</p> 
+<ol> 
+<li>Primary sources: <a href="https://arxiv.org/abs/2111.09266">GFlowNet Foundations (Bengio et al.)</a>, <a href="https://jmlr.org/papers/volume24/22-0364/22-0364.pdf">GFlowNets JMLR</a>, <a href="https://arxiv.org/abs/2102.11107">Towards Causal Representation Learning (Schölkopf et al., 2021)</a>, <a href="https://bayes.cs.ucla.edu/WHY/why-ch1.pdf">Pearl book excerpt</a></li> 
+</ol> 
+<h3>Why it could work</h3> 
+<ol> 
+<li>Causal variables enable robust out-of-distribution generalization and planning.</li> 
+<li>GFlowNets handle multi-modal solution distributions and structured discovery.</li> 
+</ol> 
+<h3>Why it might fail</h3> 
+<ol> 
+<li>Causal discovery from high-dimensional data is difficult and unstable at scale.</li> 
+</ol> 
+<h3>How to train</h3> 
+<ol> 
+<li>Use synthetic structural causal models and OOD splits for evaluation, plus molecule and program domains where rewards are clear.</li> 
+<li>Train GFlowNets to sample objects proportionally to reward; evaluate by intervention and counterfactual tasks.</li> 
+</ol> 
+<h3>Architecture</h3> 
+<ol> 
+<li>Perception front-end that proposes candidate variables or graphs.</li> 
+<li>Structured sampler or planner such as a GFlowNet over discrete objects, with verifiers for consequences.</li> 
+</ol> 
+
+
+  
+<h2>8) Hinton-ism: Brain-inspired learning rules and part-whole structure</h2> 
+<h3>Hinton: Forward-Forward and GLOM</h3> 
+<p>Forward-Forward proposes a local, backprop-free learning rule using positive and negative phases. GLOM proposes a representational scheme for part-whole hierarchies via iterative consensus.</p> 
+<ol> 
+<li>Primary sources: <a href="https://arxiv.org/abs/2212.13345">Forward-Forward (Hinton, 2022)</a>, <a href="https://arxiv.org/abs/2102.12627">GLOM (Hinton, 2021)</a></li> 
+</ol> 
+<h3>Why it could work</h3> 
+<ol> 
+<li>Closer to biological plausibility and potentially better for continual learning.</li> 
+<li>Richer hierarchical parsing of structure.</li> 
+</ol> 
+<h3>Why it might fail</h3> 
+<ol> 
+<li>Early stage; unclear parity with large-scale backprop results.</li> 
+</ol> 
+<h3>How to train</h3> 
+<ol> 
+<li>Begin with vision and audio positive-negative sampling, then scale to sequences.</li> 
+<li>Compare energy or likelihood surrogates to backprop baselines on standard benchmarks.</li> 
+</ol> 
+<h3>Architecture</h3> 
+<ol> 
+<li>Layer-local objectives for Forward-Forward or recurrent consensus among columns for GLOM, possibly atop transformer primitives.</li> 
+</ol> 
+
+  
+<h2>9) Hawkins-ism: Thousand Brains theory of intelligence</h2> 
+<h3>What it is</h3> 
+<p>Hawkins proposes that the neocortex comprises many parallel map-like models that vote to reach consensus, with sensorimotor prediction at the core.</p> 
+<ol> 
+<li>Primary source: <a href="https://www.numenta.com/resources/books/a-thousand-brains-by-jeff-hawkins/">A Thousand Brains resources</a></li> 
+</ol> 
+<h3>Why it could work</h3> 
+<ol> 
+<li>Strong grounding in continuous sensorimotor prediction and object persistence.</li> 
+</ol> 
+<h3>Why it might fail</h3> 
+<ol> 
+<li>Engineering translation to frontier ML systems is still evolving.</li> 
+</ol> 
+<h3>How to train</h3> 
+<ol> 
+<li>Egocentric video plus proprioception with continual learning regimes.</li> 
+<li>Tasks emphasizing object permanence, active perception, and manipulation.</li> 
+</ol> 
+<h3>Architecture</h3> 
+<ol> 
+<li>Many parallel cortical-column analogs maintaining object-centric latent maps with a motor loop for hypothesis testing and voting.</li> 
+</ol> 
+
+  
+<h2>10) Parr-ism: Active Inference and the Free-Energy Principle</h2> 
+<h3>What it is</h3> 
+<p>Perception, learning, and action are unified as minimizing expected free energy under a generative model. This provides a principled account of epistemic exploration.</p> 
+<ol> 
+<li>Primary sources: <a href="https://www.fil.ion.ucl.ac.uk/~karl/NRN.pdf">Friston review (2010)</a>, <a href="https://direct.mit.edu/books/oa-monograph/5299/Active-InferenceThe-Free-Energy-Principle-in-Mind">MIT Press book</a>, <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC5167251/">Friston et al., 2017</a></li> 
+</ol> 
+<h3>Why it could work</h3> 
+<ol> 
+<li>Unified objective with built-in epistemic drive for information seeking.</li> 
+</ol> 
+<h3>Why it might fail</h3> 
+<ol> 
+<li>Scaling practical implementations to internet and robot scale remains an open challenge.</li> 
+</ol> 
+<h3>How to train</h3> 
+<ol> 
+<li>Start with partially observed control tasks and multi-agent settings, using amortized inference and explicit generative models.</li> 
+</ol> 
+<h3>Architecture</h3> 
+<ol> 
+<li>Probabilistic generative world model for states, transitions, and observations, paired with a policy that minimizes expected free energy.</li> 
+</ol> 
+
+  
+<h2>11) Schmidhuber-ism: the AIXI and Gödel Machines</h2> 
+<h3>What they are</h3> 
+<p>AIXI is an incomputable optimal Bayesian RL agent over all computable environments. The Gödel Machine is a self-referential agent that rewrites its own code only when it can prove the rewrite improves expected utility.</p> 
+<ol> 
+<li>Primary sources: <a href="https://hutter1.net/ai/suaibook.pdf">Hutter, Universal Artificial Intelligence (book)</a>, <a href="https://hutter1.net/publ/uaibook2.pdf">UAI Intro</a>, <a href="https://arxiv.org/abs/cs/0309048">Schmidhuber, Gödel Machine (2003)</a>, <a href="https://people.idsia.ch/~juergen/goedelmachine.html">Gödel Machine overview</a></li> 
+</ol> 
+<h3>Why they matter</h3> 
+<ol> 
+<li>Provide theoretical targets and inform approximations to optimal agents and safe self-improvement.</li> 
+</ol> 
+<h3>Limits</h3> 
+<ol> 
+<li>Incomputable or intractable in full generality; practical systems must approximate and sacrifice guarantees.</li> 
+</ol> 
+<h3>Training and architecture</h3> 
+<ol> 
+<li>Approximate Solomonoff priors via strong learned world models and meta-learning.</li> 
+<li>Safety via verifier layers such as proof search and unit tests before self-modification.</li> 
+</ol> 
+
+
+  
+<h2>12) Goertzel-ism: Cognitive architectures and knowledge graphs</h2> 
+<h3>What it is</h3> 
+<p>OpenCog Hyperon aims to unify diverse learning and reasoning modules in a shared memory and metalanguage, enabling neural-symbolic fusion and explicit long-term memory.</p> 
+<ol> 
+<li>Primary sources: <a href="https://hyperon.opencog.org/">OpenCog Hyperon site</a>, <a href="https://wiki.opencog.org/w/Hyperon%3AAtomspace">Atomspace documentation</a></li> 
+</ol> 
+<h3>Why it could work</h3> 
+<ol> 
+<li>Heterogeneous reasoning over explicit memory may help with long-horizon tasks and knowledge-intensive reasoning.</li> 
+</ol> 
+<h3>Why it might fail</h3> 
+<ol> 
+<li>Integration complexity and limited benchmarking versus frontier LLM systems.</li> 
+</ol> 
+<h3>How to train</h3> 
+<ol> 
+<li>Iteratively build tasks that require long-term memory, multi-step symbolic reasoning, and tool orchestration, with continual knowledge graph growth.</li> 
+</ol> 
+<h3>Architecture</h3> 
+<ol> 
+<li>Symbolic Atomspace with neural encoders and retrievers, probabilistic logic, planners, and LLMs as generators inside a verified system loop.</li> 
+</ol> 
+<h1>Putting It Together</h1> 
+<p>Two pragmatic paths look strongest. First, continue scaling next-token models while adding serious test-time search, strong verifiers and judges, and scalable oversight. Second, push explicit world models, causality, and program synthesis to achieve systematic generalization and reliable agency. The likely winner fuses both: large pretrained priors plus explicit structure and verification, all wrapped in agentic systems that allocate significant inference-time compute to the hardest steps.</p> 
+
+  
+    <h3>Return <a href="./index.html">Home</a></h3>
+</body>
+</html>
