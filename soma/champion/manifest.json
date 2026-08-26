@@ -1,0 +1,18 @@
+{
+  "name": "SOMA 1B + SetAttn-EMA",
+  "N": 8,
+  "params": 999766200,
+  "val_loss": 0.8598677783675207,
+  "quantization": "HQQ INT4, block 64",
+  "experts": [
+    "expert0.int4.onnx",
+    "expert1.int4.onnx",
+    "expert2.int4.onnx",
+    "expert3.int4.onnx",
+    "expert4.int4.onnx",
+    "expert5.int4.onnx",
+    "expert6.int4.onnx",
+    "expert7.int4.onnx"
+  ],
+  "combiner": "combiner.int4.onnx"
+}

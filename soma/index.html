@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>SOMA — a tiny language model that lives in your browser</title>
-<meta name="description" content="SOMA is a tiny language model that runs entirely in your browser tab. No transformers, no backprop. No server, no upload, no telemetry.">
+<title>SOMA — recurrent language models in your browser</title>
+<meta name="description" content="Run SOMA recurrent language models entirely in your browser. No server, no prompt upload, no text telemetry.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='4' height='4' x='0' y='0' fill='%23d97878'/%3E%3Crect width='4' height='4' x='4' y='0' fill='%23d9b478'/%3E%3Crect width='4' height='4' x='8' y='0' fill='%23bdd978'/%3E%3Crect width='4' height='4' x='12' y='0' fill='%2381d978'/%3E%3Crect width='4' height='4' x='0' y='4' fill='%2378d99b'/%3E%3Crect width='4' height='4' x='4' y='4' fill='%2378d9d7'/%3E%3Crect width='4' height='4' x='8' y='4' fill='%2378a1d9'/%3E%3Crect width='4' height='4' x='12' y='4' fill='%238b78d9'/%3E%3Crect width='4' height='4' x='0' y='8' fill='%23c778d9'/%3E%3Crect width='4' height='4' x='4' y='8' fill='%23d978ae'/%3E%3Crect width='4' height='4' x='8' y='8' fill='%23d97884'/%3E%3Crect width='4' height='4' x='12' y='8' fill='%23d99e78'/%3E%3Crect width='4' height='4' x='0' y='12' fill='%23d3d978'/%3E%3Crect width='4' height='4' x='4' y='12' fill='%2397d978'/%3E%3Crect width='4' height='4' x='8' y='12' fill='%2378d985'/%3E%3Crect width='4' height='4' x='12' y='12' fill='%2378d9c1'/%3E%3C/svg%3E">
 <script>
     /* PostHog — page-view counting; autocapture and session recording are off so nothing
@@ -65,6 +65,9 @@
   #picker code { font-family:var(--mono); font-size:12px; background:var(--panel); border:1px solid var(--border);
                  border-radius:4px; padding:1px 6px; }
   #pickbtn { margin-top:12px; }
+  .modelbar { display:flex; align-items:center; gap:12px; margin:0 0 18px; color:var(--dim); font-size:13px; }
+  .modelbar select { background:var(--panel); color:var(--fg); border:1px solid var(--border2); border-radius:8px;
+                     padding:8px 32px 8px 11px; font:500 13px var(--sans); }
 
   /* ── repl ── */
   .panel { background:var(--panel); border:1px solid var(--border); border-radius:12px; padding:18px; margin-bottom:14px; }
@@ -135,7 +138,7 @@
     <p class="tag">A <b><span id="hero-params">tiny</span></b> language model
        running <b>entirely in this tab</b> — weights, sampling, everything.
        No server. Nothing you type leaves your device.</p>
-    <p class="tag2">No transformers. No attention. Trained <b>without backprop</b>.</p>
+    <p class="tag2" id="training-tag">Eight recurrent experts with a learned SetAttn-EMA combiner.</p>
     <div class="chips">
       <span class="chip"><b id="chip-params">–</b> params</span>
       <span class="chip"><b id="chip-size">–</b> of weights</span>
@@ -143,6 +146,14 @@
       <span class="chip"><b id="chip-backend">–</b></span>
     </div>
   </header>
+
+  <div class="modelbar">
+    <label for="model-select">Model</label>
+    <select id="model-select">
+      <option value="champion" selected>SOMA 1B + SetAttn-EMA (best)</option>
+      <option value="tiny">SOMA Tiny (original)</option>
+    </select>
+  </div>
 
   <div id="loader">
     <div class="bar"><div class="fill" id="loadfill"></div></div>
@@ -208,27 +219,22 @@
   <section class="about">
     <div class="rule" id="rule"></div>
     <h2><span class="sq" data-c="0"></span>What is this</h2>
-    <p>SOMA is a tiny character-level language model that runs entirely in your browser.
-       <em>No transformers. No attention. Trained without backprop.</em> It reads and writes text
-       directly, and the whole thing is small enough to fetch as a single file — smaller than most
-       hero images.</p>
-    <p>It writes plausible-looking almost-English. At this scale, that <em>is</em> the point:
-       the interesting part is watching a sub-megabyte network learn spelling, morphology, and
-       the rhythm of prose as it happens.</p>
+    <p>SOMA is a character-level recurrent language model that runs entirely in your browser.
+       The default model combines eight independently trained recurrent experts with SetAttn-EMA;
+       the original tiny, backprop-free SOMA remains available from the model selector.</p>
+    <p>Both models read and write bytes directly. The champion is a one-billion-parameter research
+       model compressed to four-bit weights; the tiny model is a 617K-parameter demonstration.</p>
 
     <h2><span class="sq" data-c="10"></span>How it runs here</h2>
-    <p>Inference happens on your device. The matrix kernels are hand-written WebAssembly SIMD
-       (<code>f32x4</code>, dual accumulators) running in a Web Worker, with a plain typed-array
-       fallback if WASM SIMD is unavailable. Typical throughput is thousands of tokens per second
-       on a laptop.</p>
-    <p>The page fetches one file of weights (<code>soma.bin</code>: a JSON header + raw fp32 tensors),
-       caches it, and all inference after that is local — generation makes zero network requests.
-       The only telemetry is an anonymous page-view count; the text you type and generate never
-       leaves the tab.</p>
+    <p>The champion runs through WebGPU using HQQ four-bit ONNX weights. SOMA Tiny uses hand-written
+       WebAssembly SIMD (<code>f32x4</code>) in a Web Worker, with a typed-array fallback.</p>
+    <p>Weights are fetched once and inference remains on your device. Generation makes no server
+       request. The only telemetry is an anonymous page-view count; the text you type and generate
+       never leaves the tab.</p>
   </section>
 
   <footer>
-    <span>SOMA — a tiny language model in your browser</span>
+    <span>SOMA — recurrent language models in your browser</span>
     <span id="foot-ckpt"></span>
   </footer>
 </div>
@@ -589,6 +595,7 @@ self.onmessage = async (e) => {
 };
 
 </script>
+<script src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.29.0/dist/ort.webgpu.min.js"></script>
 <script>
 const WASM_B64 = "AGFzbQEAAAABCgFgBn9/f39/fwADAgEABQMBAAQHEAIDbWVtAgAGbWF0dmVjAAAK4gEB3wEDA38CewF9QQAhBgJAA0AgBiADTg0B/QwAAAAAAAAAAAAAAAAAAAAAIQn9DAAAAAAAAAAAAAAAAAAAAAAhCkEAIQcgASEIA0AgCSAA/QAEACAI/QAEAP3mAf3kASEJIAogAP0ABBAgCP0ABBD95gH95AEhCiAAQSBqIQAgCEEgaiEIIAdBCGohByAHIARIDQALIAkgCv3kASEJIAn9HwAgCf0fAZIgCf0fAiAJ/R8DkpIhCyAFQQBHBEAgCyACKgIAkiELCyACIAs4AgAgAkEEaiECIAZBAWohBgwACwsL";
 
@@ -647,7 +654,7 @@ async function fetchWeights() {
 }
 
 let host;
-function startEngine(weights) {
+function startTinyEngine(weights) {
   $('loadfill').style.width = '100%';
   $('loadmsg').textContent = 'starting engine…';
   $('picker').style.display = 'none';
@@ -657,13 +664,87 @@ function startEngine(weights) {
   host.postMessage({ type: 'init', weights, wasm: b64ToBuf(WASM_B64) }, [weights]);
 }
 
+class ChampionHost {
+  constructor() { this.onmessage = null; this.stop = false; this.cancelled=false; this.experts = []; this.combiner = null; }
+  emit(m) { if (this.onmessage) this.onmessage({data:m}); }
+  zeros(n) { return new ort.Tensor('float32', new Float32Array(n), [1,n]); }
+  async init(base) {
+    if (!navigator.gpu) throw new Error('WebGPU is required for the 1B model (use current Chrome or Edge).');
+    const options = {executionProviders:['webgpu'], graphOptimizationLevel:'all'};
+    for (let i=0; i<8; i++) {
+      $('loadmsg').textContent = `loading 1B model… expert ${i+1}/8 (615 MB total)`;
+      $('loadfill').style.width = `${(i/9)*100}%`;
+      const s=await ort.InferenceSession.create(`${base}champion/expert${i}.int4.onnx`, options);
+      if(this.cancelled){s.release();throw new Error('model load cancelled');}
+      this.experts.push(s);
+    }
+    $('loadmsg').textContent = 'loading 1B model… SetAttn-EMA combiner';
+    $('loadfill').style.width = '92%';
+    this.combiner = await ort.InferenceSession.create(`${base}champion/combiner.int4.onnx`, options);
+    if(this.cancelled){this.combiner.release();throw new Error('model load cancelled');}
+    this.reset();
+    this.emit({type:'ready', cfg:{N:8,depth:2,dt:1922,val_loss:0.8598677783675207},
+      nparams:999766200, backend:'webgpu · HQQ-int4', memBytes:615e6});
+  }
+  reset() {
+    this.es = Array.from({length:8}, () => [this.zeros(1922),this.zeros(1922),this.zeros(1922),this.zeros(1922)]);
+    const uni = new Float32Array(8*256); uni.fill(-Math.log(256));
+    this.prev = new ort.Tensor('float32',uni,[8,256]);
+    this.emaNum = new ort.Tensor('float32',new Float32Array(24),[3,8]);
+    this.emaDen = new ort.Tensor('float32',new Float32Array(3),[3,1]);
+    this.cs = [this.zeros(1072),this.zeros(1072),this.zeros(1072),this.zeros(1072)]; this.pos=0;
+  }
+  async step(tok) {
+    const token = new ort.Tensor('int64', BigInt64Array.of(BigInt(tok)), [1]);
+    const lp = new Float32Array(8*256), rep = new Float32Array(8*128);
+    for (let i=0; i<8; i++) {
+      const s=this.es[i], o=await this.experts[i].run({token,h0:s[0],c0:s[1],h1:s[2],c1:s[3]});
+      lp.set(o.logp.data,i*256); rep.set(o.rep.data,i*128);
+      this.es[i]=[o.h0_n,o.c0_n,o.h1_n,o.c1_n];
+    }
+    const o=await this.combiner.run({token,
+      logp:new ort.Tensor('float32',lp,[8,256]), rep:new ort.Tensor('float32',rep,[8,128]),
+      prev_logp:this.prev, ema_num:this.emaNum, ema_den:this.emaDen,
+      h0:this.cs[0],c0:this.cs[1],h1:this.cs[2],c1:this.cs[3]});
+    this.prev=o.prev_logp_n; this.emaNum=o.ema_num_n; this.emaDen=o.ema_den_n;
+    this.cs=[o.h0_n,o.c0_n,o.h1_n,o.c1_n]; this.pos++;
+    let win=0; for(let i=1;i<8;i++) if(o.gate.data[i]>o.gate.data[win]) win=i;
+    return {logits:o.out.data,win};
+  }
+  async postMessage(m) {
+    if(m.type==='stop'){this.stop=true;return;}
+    if(m.type==='reset'){this.reset();this.emit({type:'resetdone'});return;}
+    if(m.type!=='generate') return;
+    this.stop=false; const sampler=new SomaSampler(m.params), pwins=[]; let r=null;
+    for(const b of m.promptBytes){r=await this.step(b);pwins.push(r.win);}
+    this.emit({type:'prefill',wins:Uint8Array.from(pwins)});
+    if(!r){this.emit({type:'gendone',done:0,elapsed:0,pos:this.pos});return;}
+    let logits=r.logits,done=0;const t0=performance.now();
+    while(done<m.n&&!this.stop){
+      const tok=sampler.sample(logits), q=await this.step(tok); logits=q.logits; done++;
+      this.emit({type:'chunk',bytes:Uint8Array.of(tok),wins:Uint8Array.of(q.win),
+        ents:Float32Array.of(championEntropyBits(logits)),done,pos:this.pos,elapsed:(performance.now()-t0)/1000});
+      await new Promise(resolve=>setTimeout(resolve,0));
+    }
+    this.emit({type:'gendone',done,elapsed:(performance.now()-t0)/1000,pos:this.pos});
+  }
+  release(){ this.cancelled=true; for(const s of this.experts)s.release(); this.experts=[];
+    if(this.combiner){this.combiner.release();this.combiner=null;} }
+}
+
+function championEntropyBits(logits){
+  let mx=-Infinity; for(const x of logits)if(x>mx)mx=x;
+  let sum=0; const p=new Float64Array(256); for(let i=0;i<256;i++){p[i]=Math.exp(logits[i]-mx);sum+=p[i];}
+  let h=0; for(const x of p){const q=x/sum;if(q>0)h-=q*Math.log2(q);} return h;
+}
+
 function showPicker() {
   $('loadmsg').textContent = '';
   const p = $('picker');
   p.style.display = 'block';
   const load = async (file) => {
     if (!file) return;
-    startEngine(await file.arrayBuffer());
+    startTinyEngine(await file.arrayBuffer());
   };
   $('pickbtn').onclick = () => $('pickfile').click();
   $('pickfile').onchange = (e) => load(e.target.files[0]);
@@ -672,11 +753,31 @@ function showPicker() {
   p.ondrop = (e) => { e.preventDefault(); p.classList.remove('drag'); load(e.dataTransfer.files[0]); };
 }
 
+async function loadModel(kind) {
+  if(host){try{host.postMessage({type:'stop'});host.release?.();}catch(_){} host=null;}
+  running=false; autoRan=false; usage=[]; entHist.length=0;
+  $('repl').style.display='none'; $('loader').style.display=''; $('picker').style.display='none';
+  $('loadfill').style.width='0%'; $('go').disabled=true;
+  if(kind==='champion'){
+    $('len').value='100'; $('lenv').textContent='100';
+    $('training-tag').innerHTML='Eight recurrent experts with a learned <b>SetAttn-EMA</b> combiner.';
+    const loadingHost=new ChampionHost(); host=loadingHost; loadingHost.onmessage=(e)=>handleMsg(e.data);
+    try{await loadingHost.init(new URL('./',location.href).href);}catch(err){
+      if(host===loadingHost)$('loadmsg').textContent=`Could not start champion: ${err.message}`;
+    }
+  }else{
+    $('len').value='400'; $('lenv').textContent='400';
+    $('training-tag').innerHTML='No transformers. No attention. Trained <b>without backprop</b>.';
+    try{startTinyEngine(await fetchWeights());}catch(err){showPicker();}
+  }
+}
+
 async function init() {
+  $('model-select').onchange=()=>loadModel($('model-select').value);
   try {
-    startEngine(await fetchWeights());
+    await loadModel($('model-select').value);
   } catch (err) {
-    showPicker();
+    $('loadmsg').textContent=err.message;
   }
 }
 
@@ -698,20 +799,20 @@ function handleMsg(m) {
     sparkline();
     engineMemBytes = m.memBytes;
     updateMem();
-    const mb = (m.nparams * 4 / 1e6).toFixed(1) + ' MB';
+    const mb = m.backend.startsWith('webgpu') ? '615 MB INT4' : (m.nparams * 4 / 1e6).toFixed(1) + ' MB';
     $('hero-params').textContent = (m.nparams >= 1e6 ? (m.nparams/1e6).toFixed(1) + 'M' : Math.round(m.nparams/1e3) + 'K') + '-parameter';
     $('chip-params').textContent = m.nparams.toLocaleString();
     $('chip-size').textContent = mb;
     $('chip-val').textContent = (+c.val_loss).toFixed(3);
     $('chip-backend').textContent = m.backend;
     $('foot-ckpt').textContent = '';
-    $('modelinfo').textContent =
-      `${m.nparams.toLocaleString()} params (${mb}) │ val ${(+c.val_loss).toFixed(3)} nats/char`;
-    $('backend').textContent = m.backend + ' · worker';
+    $('modelinfo').textContent = `${m.nparams.toLocaleString()} params (${mb}) │ ` +
+      (m.backend.startsWith('webgpu') ? 'source checkpoint val ' : 'val ') + `${(+c.val_loss).toFixed(3)} nats/char`;
+    $('backend').textContent = m.backend + (m.backend.startsWith('webgpu') ? '' : ' · worker');
     $('loader').style.display = 'none';
     $('repl').style.display = '';
     $('go').disabled = false;
-    if (!autoRan) { autoRan = true; setTimeout(generate, 250); }   // live demo on load
+    autoRan = true;
   } else if (m.type === 'prefill') {
     for (const w of m.wins) usage[w]++;
     sparkline();
@@ -722,7 +823,7 @@ function handleMsg(m) {
       entHist.push(m.ents[i]);
     }
     flushPending(gSpan);
-    $('tps').textContent = Math.round(m.done / m.elapsed).toLocaleString();
+    $('tps').textContent = m.done/m.elapsed < 1 ? (m.done/m.elapsed).toFixed(2) : Math.round(m.done/m.elapsed).toLocaleString();
     $('mspt').textContent = (1000 * m.elapsed / m.done).toFixed(3);
     $('ctx').textContent = m.pos;
     sparkline(); entSpark(); updateMem();
@@ -730,7 +831,7 @@ function handleMsg(m) {
     flushPending(gSpan);
     if (cur) cur.remove();
     if (m.done > 0) {
-      $('tps').textContent = Math.round(m.done / m.elapsed).toLocaleString();
+      $('tps').textContent = m.done/m.elapsed < 1 ? (m.done/m.elapsed).toFixed(2) : Math.round(m.done/m.elapsed).toLocaleString();
       $('mspt').textContent = (1000 * m.elapsed / m.done).toFixed(3);
       $('ctx').textContent = m.pos;
     }
