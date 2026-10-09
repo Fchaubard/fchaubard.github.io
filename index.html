@@ -26,9 +26,10 @@
         documenting what I am doing / thinking about here in a raw / open format. </p>
     
     <h2>Here is what I am currently working on / interested in:</h2>
-    <p> I think that SGD + stacked transformers is "perhaps" a sufficient path to get to AGI, but at what cost. We need huge terrawatt datacenters while our brains are better at learning (as of now) and operate on 100W. Something is missing. If Universal Apprx Theorem is true, and if neurons don't backprop, then there must exist another learning algorithm (solver) + architecture that gets us there as well, perhaps much quicker and less expensive. I think there are many "sufficient" paths to get there. We have found (perhaps) one element in the set of AGI, but its certainly not necessary. I agree with Yann Lecunn that we did not need flapping wings to fly, but we did need two wings (initially). Similarly there are many elements in the set of flight, and they all have different trade offs (e.g. helicopters are great for their use case, rockets are great for theirs, planes are great for theirs) there will be many elements in the set of AGI, and they will simiarly have different tradeoffs that we will want to use some for some use cases and others for others.  </p>
+    <p> My two life OKRs are: 1) solve AGI 2) increase social mobility in US. </p>
+    <p> For the first, I am going back to Stanford to finish my PhD. My main thesis: I think that SGD + stacked transformers is "perhaps" a sufficient path to get to AGI, but at what cost. We need huge terrawatt datacenters while our brains are better at learning (as of now) and operate on 100W. Something is missing. If Universal Apprx Theorem is true, and if neurons don't backprop, then there must exist another learning algorithm (solver) + architecture that gets us there as well, perhaps much quicker and less expensive. I think there are many "sufficient" paths to get there. We have found (perhaps) one element in the set of AGI, but its certainly not necessary. I agree with Yann Lecunn that we did not need flapping wings to fly, but we did need two wings (initially). Similarly there are many elements in the set of flight, and they all have different trade offs (e.g. helicopters are great for their use case, rockets are great for theirs, planes are great for theirs) there will be many elements in the set of AGI, and they will simiarly have different tradeoffs that we will want to use some for some use cases and others for others.  </p>
     <p> So right now I want to find another one. The biggest reason why LSTMs, DNCs, NTMs, and other RNNs with big external / internal memories did not scale was BPTT. Well lets get rid of it. Can we find a forward-forward algo that outperforms? Can achieve infinite context length and does not need to keep around all temporal activations! Lets try! If you are interested in this please reach out. </p>
-    
+    <p> For the second, I have joined YC as a Visiting Partner. I dont think there is a company that has done more for social mobility on the planet so I am heading back to YC to help them on this mission. </p>
     <h2>Publications, Inventions, Awards, and Talks:</h2>
     <ol>
         <li>
@@ -210,5 +211,188 @@ US US20180260772A1 (6/1/2016)</a>
         
         
     </ol>
+
+
+    <style>
+  #fc-videos {
+    width: 100%;
+    margin: 40px 0;
+    font-family: Arial, sans-serif;
+    color: #171717;
+  }
+  #fc-videos * { box-sizing: border-box; }
+  #fc-videos .fc-section { margin-bottom: 40px; }
+  #fc-videos .fc-heading {
+    margin: 0 0 20px;
+    font-size: 26px;
+    line-height: 1.3;
+  }
+  #fc-videos .fc-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+    gap: 28px 20px;
+  }
+  #fc-videos .fc-card {
+    display: block;
+    min-width: 0;
+    color: inherit;
+    text-decoration: none;
+  }
+  #fc-videos .fc-thumbnail {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 16 / 9;
+    border-radius: 12px;
+    background: #eee;
+  }
+  #fc-videos .fc-thumbnail img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform .2s ease;
+  }
+  #fc-videos .fc-play {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    background: rgba(0, 0, 0, .12);
+    opacity: 0;
+    transition: opacity .2s ease;
+  }
+  #fc-videos .fc-play::after {
+    content: "▶";
+    display: grid;
+    place-items: center;
+    width: 58px;
+    height: 40px;
+    border-radius: 10px;
+    background: #f00;
+    color: #fff;
+    font-size: 23px;
+  }
+  #fc-videos .fc-card:hover .fc-play,
+  #fc-videos .fc-card:focus-visible .fc-play { opacity: 1; }
+  #fc-videos .fc-card:hover img { transform: scale(1.035); }
+  #fc-videos .fc-card:focus-visible {
+    outline: 3px solid #f26522;
+    outline-offset: 5px;
+    border-radius: 12px;
+  }
+  #fc-videos .fc-title {
+    margin: 11px 0 6px;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.4;
+  }
+  #fc-videos .fc-meta {
+    margin: 0;
+    color: #606060;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+</style>
+
+<div id="fc-videos"></div>
+
+<script>
+(() => {
+  // Edit these lists to add videos or update view counts.
+  const sections = [
+    {
+      heading: "Y Combinator",
+      videos: [
+        ["xc2FTBGRSJo", "What If We Stopped Using GPUs?", 21600, "Paper Club"],
+        ["Jv5B5CEaPJI", "Robot-Use Agents: Why General-Purpose Models May Win in Robotics", 65839, "Decoded"],
+        ["n9xKblqyQ28", "Why The Harness Matters More Than The Model", 390793, "Paper Club"],
+        ["IfoPg2QefF8", "Going In Deep On Data", 44499, "Paper Club"],
+        ["myDCd0hNqQU", "Why Robotics Still Isn't Solved - But Could Be Soon", 74113, "Paper Club"],
+        ["n8dz2FX0_uY", "Lessons From Training Composer At Cursor And Building Meta/Nvidia Compute Clusters", 43522, "Paper Club"],
+        ["xZW8fR9ediE", "Compute at Sea", 22631, "RFS"],
+        ["qz4GQ0zUFRw", "World Models, JEPA And The Path To Sample-Efficient RL", 33680, "Decoded"],
+        ["3rWSvrFahIY", "Self-Play for LLMs, AI for Biology, Formal Verification, and More", 94953, "Paper Club"],
+        ["wE1ZgJdt4uM", "Inference, Diffusion, World Models, and More", 144651, "Paper Club"],
+        ["DGtUUMNYLcc", "Recursion Is The Next Scaling Law In AI", 20044, "Decoded"],
+        ["dC_3ys349bU", "The ML Technique Every Founder Should Know", 38566, "Decoded"]
+      ]
+    },
+    {
+      heading: "Stanford",
+      videos: [
+        ["iNsn35bKnUU", "Cursor - Oskar Schulz (President) and Ben Spector (PhD CS)", 5392, "Hidden Layer Podcast · #103"],
+        ["Woxcg8lxED0", "Poetiq - Ian Fischer (CEO)", 1590, "Hidden Layer Podcast · #104"],
+        ["hR6zyA-EUPo", "Sourcegraph - Beyang Liu (CTO)", 1200, "Hidden Layer Podcast · #101"],
+        ["N62FTn0sAO0", "OpenAI/Cresta.ai - Tim Shi", 1201, "Hidden Layer Podcast · #102"],
+        ["W5I-B-kxdjo", "Dr. Mengye Ren and Francois Chaubard", 1783, "Hidden Layer Podcast · #106"],
+        ["qi_oZhIQYNk", "Michael Ryan and Francois Chaubard", 303, "Hidden Layer Podcast · #107"],
+        ["cfF1WJKTtPo", "Houjun “Jack” Liu and Francois Chaubard", 662, "Hidden Layer Podcast · #108"]
+      ]
+    },
+    {
+      heading: "ARC-AGI",
+      videos: [
+        ["lVhr1KIf-c8", "Whats blocking AGI? Jerry Tworek", 6756, "ARC Prize"],
+        ["wKwLDaPP6YI", "The field is underestimating inference compute | Noam Brown", 11527, "ARC Prize"]
+      ]
+    }
+  ];
+
+  const root = document.getElementById("fc-videos");
+  const number = new Intl.NumberFormat("en-US");
+
+  sections.forEach(({ heading, videos }) => {
+    const section = document.createElement("section");
+    section.className = "fc-section";
+
+    const h2 = document.createElement("h2");
+    h2.className = "fc-heading";
+    h2.textContent = heading;
+    section.appendChild(h2);
+
+    const grid = document.createElement("div");
+    grid.className = "fc-grid";
+
+    videos.sort((a, b) => b[2] - a[2]).forEach(([id, title, views, series]) => {
+      const card = document.createElement("a");
+      card.className = "fc-card";
+      card.href = "https://www.youtube.com/watch?v=" + id;
+      card.target = "_blank";
+      card.rel = "noopener noreferrer";
+      card.setAttribute("aria-label", title + " (opens YouTube in a new tab)");
+
+      const thumbnail = document.createElement("div");
+      thumbnail.className = "fc-thumbnail";
+
+      const image = document.createElement("img");
+      image.src = "https://i.ytimg.com/vi/" + id + "/hqdefault.jpg";
+      image.alt = "";
+      image.loading = "lazy";
+      image.decoding = "async";
+      thumbnail.appendChild(image);
+
+      const play = document.createElement("span");
+      play.className = "fc-play";
+      play.setAttribute("aria-hidden", "true");
+      thumbnail.appendChild(play);
+
+      const name = document.createElement("h3");
+      name.className = "fc-title";
+      name.textContent = title;
+
+      const meta = document.createElement("p");
+      meta.className = "fc-meta";
+      meta.textContent = series + " · " + number.format(views) + " views";
+
+      card.append(thumbnail, name, meta);
+      grid.appendChild(card);
+    });
+
+    section.appendChild(grid);
+    root.appendChild(section);
+  });
+})();
+</script>
+    
 </body>
 </html>
