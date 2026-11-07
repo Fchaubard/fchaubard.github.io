@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weight-space programming: writing the weights, then testing the rule | Francois Chaubard</title>
+  <meta name="description" content="A small-network study of weight-space programming, gradient optimization, and extrapolation, with the paper, code, prompts, and measured results released publicly.">
+  <link rel="canonical" href="https://fchaubard.github.io/weight_space_programming.html">
+  <style>
+    body { max-width: 960px; margin: 32px auto; padding: 0 20px 48px; color: #1d2930; font: 18px/1.6 Georgia, 'Times New Roman', serif; }
+    h1 { max-width: 850px; font-size: clamp(2rem, 5vw, 2.9rem); line-height: 1.15; }
+    h2 { margin-top: 2.2em; font-size: 1.5rem; line-height: 1.3; }
+    a { color: #17677b; text-underline-offset: 3px; }
+    a:hover { color: #a9462f; }
+    .meta, figcaption { color: #52616a; font-size: .94rem; }
+    .links { display: flex; flex-wrap: wrap; gap: 8px 24px; padding: 16px 0; border-top: 1px solid #d5dfe3; border-bottom: 1px solid #d5dfe3; }
+    figure { margin: 28px 0 36px; }
+    figure img { display: block; width: 100%; height: auto; background: white; }
+    figcaption { margin-top: 12px; line-height: 1.5; }
+    li { margin: .55em 0; }
+    .finding { border-left: 4px solid #287b88; padding: 3px 0 3px 20px; margin: 1.8em 0; }
+    code { font-size: .9em; }
+    footer { margin-top: 3em; padding-top: 1em; border-top: 1px solid #d5dfe3; }
+    @media (max-width: 600px) { body { margin-top: 20px; padding-right: 16px; padding-left: 16px; } }
+  </style>
+</head>
+<body>
+<main>
+  <p><a href="./index.html">Francois Chaubard / Home</a></p>
+  <h1>Weight-space programming: writing the weights, then testing the rule</h1>
+  <p class="meta">Francois Chaubard · <time datetime="2026-11-07">November 7, 2026</time> · Research preprint</p>
+  <nav class="links" aria-label="Research resources">
+    <a href="https://raw.githubusercontent.com/Fchaubard/WSP-for-turing-complete/main/paper.pdf">Read the paper (PDF)</a>
+    <a href="https://github.com/Fchaubard/WSP-for-turing-complete">Code, analysis, and LaTeX</a>
+    <a href="https://github.com/Fchaubard/WSP-for-turing-complete/tree/main/focus">Experiments and recorded responses</a>
+  </nav>
+
+  <p>I've been thinking about a gap for years: the universal approximation theorem tells us that suitable neural networks can approximate continuous functions on compact domains arbitrarily well. But how do we actually find the weights? And do those weights continue the right rule outside the examples we showed them?</p>
+  <p>The theorem does not promise that a particular small network can return every answer exactly, or that any particular optimizer will find the desired solution. That gap is the experiment here. I asked Astra to write the numerical weights of small networks directly, then ran those networks independently on unseen inputs.</p>
+  <p>That is <strong>weight-space programming (WSP)</strong>. Once the weights are written, the small network performs inference without calling the language model. The results are interesting enough that I'm releasing the code, data, prompts, analysis, LaTeX, and preprint together.</p>
+
+  <h2>What did we actually compare?</h2>
+  <p>The main study covers ten tasks: square, sine, positive self-power <em>x<sup>x</sup></em>, hyperbolic tangent, addition, subtraction, running sum, sorting four numbers, Fibonacci numbers, and triangular numbers. We sweep 29 task-and-architecture pairs, each from three random starts: <strong>87 settings</strong>, using networks with 3–50 trainable coefficients.</p>
+  <p>The architectures are explicit: small multilayer perceptrons with rectified linear activations, residual sorting networks, and recurrent networks. Their training objectives are nonconvex in the weights. Even addition becomes a nonconvex optimization problem when it is represented by a network with a trainable hidden layer.</p>
+  <p>For the signed continuous tasks, training inputs lie inside [−3, 3], and the outer test uses [−10, −3] and [3, 10]. Positive self-power uses positive inputs. The integer-sequence tests use later indices, including 33–64. The paper gives the exact splits and every architecture.</p>
+  <p>We compare two forms of WSP, each with examples alone and with the generating formula also supplied:</p>
+  <ul>
+    <li><strong>One-shot WSP:</strong> Astra receives the architecture, initial weights, examples, and intended range, then returns numerical coefficients in one response.</li>
+    <li><strong>Iterative WSP:</strong> Astra starts with that response and gets up to three revisions using training and development feedback. A revision is retained only if it improves development loss, with training loss breaking ties. Test scores never select the weights.</li>
+  </ul>
+  <p>Backpropagation computes gradients; it is not, by itself, an update rule. Our numerical comparisons include full-batch gradient descent using backpropagation, gradient descent followed by the limited-memory Broyden–Fletcher–Goldfarb–Shanno method (L-BFGS), and additional adaptive and least-squares methods. The fixed-network comparisons share architectures and initial weights. Iterative WSP receives extra development feedback, so we also report gradient controls given the entire feedback pool. Computation and pretrained knowledge are not matched.</p>
+
+  <h2>Exact outputs are possible in some of these small networks</h2>
+  <p>Both examples-only WSP procedures match every outer-test reference in the same <strong>30 of 87 settings</strong>. Plain gradient descent and gradient descent followed by L-BFGS do so in zero settings under the tested budgets. At the specified sufficient sizes, WSP gets all tested addition, subtraction, running-sum, Fibonacci, and triangular-number outputs exactly right.</p>
+  <p>Here, “exact” means equality with the 64-bit floating-point reference on every output of the tested example. It does not mean “beyond machine precision,” and it is not a proof about every possible input. We also report root mean squared error (RMSE), because two methods can both miss exact equality while having very different numerical accuracy.</p>
+  <p>For example, on the two-state Fibonacci network, the median outer RMSE across three starts is zero for WSP, about 2.44 × 10<sup>10</sup> after plain gradient descent, and 0.0715 after its L-BFGS refinement. That last comparison matters: refinement helps substantially even when it does not reach exact equality.</p>
+
+  <h2>The aggregate ranking needs its units attached</h2>
+  <p>The plot below ranks all 14 complete optimizer pipelines by summing each task's mean raw extrapolation RMSE across sizes and starts. Iterative WSP has the smallest total in both information conditions. For examples-only WSP, that total falls from about <strong>1.06 trillion to 2.03 billion</strong> after iteration.</p>
+  <figure>
+    <a href="assets/wsp/optimizer-ranking.png"><img src="assets/wsp/optimizer-ranking.png" alt="Fourteen optimizer pipelines ranked by the sum of ten task mean raw extrapolation errors; the two iterative WSP conditions have the lowest totals." width="1562" height="1199" loading="lazy"></a>
+    <figcaption>Lower is better. Each task contributes one mean, but output scales are not normalized. The horizontal axis is logarithmic; arrows mark totals beyond the displayed range, with their actual values printed at the right. The paper includes the full-range chart and the contribution of each task.</figcaption>
+  </figure>
+  <p>Those huge numbers need context. Fibonacci contributes 99.8% of the examples-only one-shot total, including errors from narrow recurrent networks that cannot represent the exact recurrence. Positive self-power contributes 78.1% of the iterative total. The ranking is therefore sensitive to target magnitude and severe failures. It is a result for this metric and benchmark, not a universal ordering of optimizers.</p>
+
+  <h2>A better development fit can give a worse extrapolation rule</h2>
+  <p>This was the most useful surprise. The iterative selector improves development loss by design, but that does not ensure better extrapolation. To compare errors across tasks, scaled RMSE divides each prediction error by the larger of one and the target magnitude before computing RMSE. In the formula-and-examples condition, median scaled outer RMSE falls from 0.0731 to 0.00590 after the first revision opportunity, then rises to 0.227 after the second. A table of final results alone would hide that temporary improvement.</p>
+  <figure>
+    <a href="assets/wsp/revision-progress.png"><img src="assets/wsp/revision-progress.png" alt="Three panels show training error, development feedback error, and untouched extrapolation error across one-shot WSP and three revision opportunities. Development error falls, but extrapolation can worsen." width="1562" height="693" loading="lazy"></a>
+    <figcaption>Each point is a median across the same 87 settings in one information condition. Round zero is the one-shot response. Stopped runs retain their last weights. Development data provide feedback and select revisions; extrapolation scores were computed after selection was frozen. Vertical axes are logarithmic with different ranges.</figcaption>
+  </figure>
+  <p>The median scaled extrapolation error for examples-only WSP rises from 0.057 to 0.235 even while its summed raw error falls. Those statements are consistent: a median and a raw sum emphasize different parts of the error distribution.</p>
+  <p>Looking at the actual functions makes the failure concrete. In one square network, development RMSE improves from 0.396 to 0.0145, but outer RMSE worsens from 1.22 to about 24. The revised weights concentrate all changes of slope inside the feedback interval and extend straight lines outside it. At input 10, the prediction changes from approximately 100 to 46.7.</p>
+  <figure>
+    <a href="assets/wsp/function-predictions.png"><img src="assets/wsp/function-predictions.png" alt="Square, sine, and hyperbolic tangent predictions over minus ten to ten, comparing the target, one-shot WSP, iterative WSP, and gradient descent plus L-BFGS. The central training and development interval is shaded." width="1775" height="750" loading="lazy"></a>
+    <figcaption>Three illustrative cases, each with 16 hidden units, 50 coefficients, and the first recorded random start. Dots are training examples. These show specific extrapolation regressions, not how frequently regression occurs across the full benchmark.</figcaption>
+  </figure>
+
+  <h2>What if Astra chooses the architecture too?</h2>
+  <p>That is a separate experiment. Thirty new one-shot requests provide input/output pairs and a deployment domain, but no prescribed architecture or target formula. Astra chooses the graph and coefficients from a declared library that supports affine maps, activations, multiplication, recurrence, convolution, and attention. Extrapolation is the primary goal, with coefficient storage, inference memory, and arithmetic as secondary objectives.</p>
+  <p><strong>28 of 30 proposals are executable; 21 match every original outer-test output.</strong> The three sine proposals reach outer RMSE 7.79 × 10<sup>−16</sup>. Positive self-power produces one valid proposal with RMSE about 16,759 and two invalid proposals, which remain failures in the results.</p>
+  <p>The operator library matters. Square can use a single multiplication node with zero stored coefficients, and hyperbolic tangent can use its native activation. A zero-coefficient graph still needs a graph description and runtime storage. We report those costs, including logical live tensor memory and scalar arithmetic; we do not claim a globally smallest architecture. These graph-choice trials are not mixed into the fixed-network optimizer ranking.</p>
+
+  <h2>Why I'm excited, and what comes next</h2>
+  <p>The interesting capability is that a language model can return an executable numerical object: a small network whose weights can be inspected, replayed, and tested without the language model at inference time. On several tasks that object preserves the rule outside the examples. On others, iterative feedback damages the continuation, and the saved weights let us see how.</p>
+  <p>There is much more to test. Familiar formulas can be recognized from pretrained knowledge, so exact answers alone do not distinguish recall from new inference. Newly composed functions, broader task families, stronger tuning controls, and independent numerical implementations are natural next experiments. This finite benchmark does not establish a solver for every Turing-computable function or a replacement for gradient optimization across deep learning.</p>
+  <p>I'm putting the work out in the open so other people can inspect those boundaries and extend the experiment. The repository includes the numerical coefficients, original prompts and replies, public construction explanations, recorded revision decisions, scoring code, analyses, figures, and editable paper source.</p>
+  <p><a href="https://raw.githubusercontent.com/Fchaubard/WSP-for-turing-complete/main/paper.pdf">Read the preprint</a> or <a href="https://github.com/Fchaubard/WSP-for-turing-complete">explore WSP-for-turing-complete on GitHub</a>.</p>
+</main>
+<footer>
+  <p class="meta">Research by Francois Chaubard and Astra, credited on the preprint as an AI research collaborator.</p>
+  <p><a href="./index.html">Return Home</a></p>
+</footer>
+</body>
+</html>
