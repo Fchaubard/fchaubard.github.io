@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A ZOO deep learning survey: twelve ways to train without backprop, one budget | Francois Chaubard</title>
+  <meta name="description" content="Twelve zero-order (backprop-free) training rules against backpropagation on an MLP, a ConvNet, an LSTM and a Transformer under one budget, with the paper, LaTeX, code and every run released publicly.">
+  <link rel="canonical" href="https://fchaubard.github.io/zoo_survey.html">
+  <style>
+    body { max-width: 960px; margin: 32px auto; padding: 0 20px 48px; color: #1d2930; font: 18px/1.6 Georgia, 'Times New Roman', serif; }
+    h1 { max-width: 850px; font-size: clamp(2rem, 5vw, 2.9rem); line-height: 1.15; }
+    h2 { margin-top: 2.2em; font-size: 1.5rem; line-height: 1.3; }
+    a { color: #17677b; text-underline-offset: 3px; }
+    a:hover { color: #a9462f; }
+    .meta, figcaption { color: #52616a; font-size: .94rem; }
+    .links { display: flex; flex-wrap: wrap; gap: 8px 24px; padding: 16px 0; border-top: 1px solid #d5dfe3; border-bottom: 1px solid #d5dfe3; }
+    figure { margin: 28px 0 36px; }
+    figure img { display: block; width: 100%; height: auto; background: white; }
+    figcaption { margin-top: 12px; line-height: 1.5; }
+    li { margin: .55em 0; }
+    .finding { border-left: 4px solid #287b88; padding: 3px 0 3px 20px; margin: 1.8em 0; }
+    code { font-size: .9em; }
+    footer { margin-top: 3em; padding-top: 1em; border-top: 1px solid #d5dfe3; }
+    @media (max-width: 600px) { body { margin-top: 20px; padding-right: 16px; padding-left: 16px; } }
+  </style>
+</head>
+<body>
+<main>
+  <p><a href="./index.html">Francois Chaubard / Home</a></p>
+  <h1>A ZOO deep learning survey: twelve ways to train without backprop, one budget</h1>
+  <p class="meta">Francois Chaubard · <time datetime="2026-11-11">November 11, 2026</time> · Research preprint</p>
+  <nav class="links" aria-label="Research resources">
+    <a href="https://github.com/Fchaubard/zero_order_optimization_DL_survey/blob/main/paper/zoo_survey_final.pdf">Read the paper (PDF)</a>
+    <a href="https://github.com/Fchaubard/zero_order_optimization_DL_survey">Code, results, and LaTeX</a>
+    <a href="https://github.com/Fchaubard/zero_order_optimization_DL_survey/tree/main/results_v2">Every run's results</a>
+  </nav>
+
+  <p>In early 2024 I wrote about <a href="./zero_order.html">my journey from first-order to zeroth-order optimization</a>, and how painful it is. Zero-order optimization (ZOO) trains a network from loss evaluations alone, without back-propagating errors. That is the natural training rule for neuromorphic and analog hardware, for systems that are not differentiable, for biologically plausible learning, and for training when you cannot afford to store activations.</p>
+  <p>There are a lot of ZOO rules: SPSA, random search, the whole node-perturbation family, forward-forward, curvature-preconditioned variants, and new ones every month. But every paper picks its own networks, its own budget and its own baselines, so they are almost never compared head to head. I wanted to know which one actually trains best when they all get the same networks, the same compute and the same update rule.</p>
+  <p>So I put <strong>twelve backprop-free rules</strong> in one ring with backpropagation as the reference. The paper, the LaTeX, the code, the job lists and the per-minute history of every run are public.</p>
+
+  <h2>What did we compare?</h2>
+  <p>Four networks of about 40k parameters each: an MLP on MNIST, a ConvNet on CIFAR-10, and a character-level LSTM and Transformer on Penn Treebank. Every run gets one hour on one RTX 5090, counting only training time. Every probe method gets the same 16 forward passes per step (17 for the curvature-preconditioned rules, which need a clean pass), and every gradient estimate goes through the same Adam update. The probe scale is tied to the learning rate, a single knob ε, which a screening sweep picks per method and task from five values. The selected setting is then rerun with three seeds and reported at the best validation checkpoint.</p>
+  <p>The rules:</p>
+  <ul>
+    <li><strong>Weight-space perturbation:</strong> SPSA, its curvature-preconditioned variant 1.5-SPSA, and random search.</li>
+    <li><strong>Node perturbation:</strong> perturb the activities instead of the weights, then turn each loss change into a local weight update. Classic (NP), activity-based (ANP), iterative one layer at a time (INP), decorrelated (DANP), curvature-preconditioned (1.5-ANP), and a new combination, 1.5-INP.</li>
+    <li><strong>Two recent Transformer rules from Q Labs:</strong> DUST, a token-local node-perturbation rule, which I ported to all four networks, and identity-path credit from their Noise speedrun.</li>
+    <li><strong>Forward-forward</strong>, Hinton's local goodness rule.</li>
+  </ul>
+
+  <h2>DUST is the best probe method, and the gap to backprop is still large</h2>
+  <p>The chart below sums each rule's test loss over the four tasks. Backprop scores 3.53. DUST is the best zero-order rule at 4.86, ahead of 1.5-INP (5.27) and iterative node perturbation (5.36). Classic node perturbation and the weight-space rules (1.5-SPSA, SPSA, random search) follow, and the activity-based and decorrelated variants come last.</p>
+  <figure>
+    <a href="assets/zoo/summed-loss.png"><img src="assets/zoo/summed-loss.png" alt="Horizontal stacked bars of best-checkpoint test loss summed over four tasks for eleven methods. Backprop is lowest at 3.53, then DUST, 1.5-INP, INP and NP; ANP is highest at 6.79." width="1472" height="426" loading="lazy"></a>
+    <figcaption>Lower is better. Best-checkpoint test loss summed over the four tasks, with each task's contribution stacked, mean over three seeds. Forward-forward is omitted because its readout loss is not comparable. Table 1 of the paper has every number with its seed spread.</figcaption>
+  </figure>
+  <p>The picture depends a lot on the task:</p>
+  <ul>
+    <li><strong>MNIST is nearly solved.</strong> The best node-perturbation rules reach 96.7–97.0% accuracy against backprop's 97.0%.</li>
+    <li><strong>CIFAR-10 is not.</strong> Classic node perturbation is best at 65.0%, against backprop's 69.2%.</li>
+    <li><strong>Language models are where DUST shines.</strong> 2.47 bits per character on the LSTM and 2.78 on the Transformer, against 2.69 and 3.11 for the next rule. DUST's LSTM beats an add-0.1 trigram model (2.61), which most rules do not. But backprop reaches 1.80 and 1.84: after an hour, most zero-order rules have learned roughly bigram statistics, and backprop has learned a real character model.</li>
+  </ul>
+
+  <div class="finding">
+    <p><strong>The step size matters more than the probe scale.</strong> At ε = 10<sup>−4</sup>, eight of the ten original rules improve on both image tasks, and SPSA and random search close about half of their gap. The step size has to be screened per method before the estimators can be compared.</p>
+  </div>
+
+  <h2>Identity-path credit closes part of the Transformer gap</h2>
+  <p>Identity-path credit measures the error at the top of a residual network exactly, by finite differences through the final norm and readout, and sends that same error down the residual path to every block. Each block then takes one cheap local step. It needs only one forward pass per step, so it takes 308k steps in the hour where DUST takes 78k.</p>
+  <p>On the Transformer it beats every other backprop-free rule: <strong>2.56 bits per character</strong>, against DUST's 2.78 and backprop's 1.84. It also gets relatively better as the model grows: its gap to backprop narrows from 0.72 bits per character at 40k parameters to 0.44 at 4M. The catch is that it needs a residual stream, so it does not apply to the MLP, the ConvNet or the LSTM.</p>
+
+  <h2>Curvature preconditioning does not help</h2>
+  <p>This one is personal, since 1.5-SPSA and 1.5-ANP are my own methods. Their idea is to spend one extra clean pass on a three-point curvature estimate and damp the step where the loss is sharp. Under a fair budget, the curvature factor does not earn its pass:</p>
+  <ul>
+    <li><strong>1.5-SPSA</strong> matches SPSA. Its per-direction weights span a narrow range, and Adam removes their common scale. Under plain SGD it does not help either.</li>
+    <li><strong>1.5-ANP</strong> does fix plain ANP on the sequence models, but its control with the curvature exponent set to zero does just as well. The gain comes from its other ingredients (central differences, per-unit normalization, token-local credit), not the curvature.</li>
+    <li><strong>1.5-DUST</strong>, the 1.5 estimator inside DUST, lowers the alignment with the true gradient on all four tasks in a CPU check, so I did not spend GPU time on it.</li>
+  </ul>
+  <p>I would rather publish that than leave it out.</p>
+
+  <h2>Scaling up does not close the gap</h2>
+  <p>I reran the rules at 10× and 100× the parameter count (400k and 4M, one seed each). DUST and 1.5-INP stay the two best probe methods, but backprop improves more, so the gap widens. The step size picked at 40k also has to shrink with width.</p>
+  <figure>
+    <a href="assets/zoo/model-size.png"><img src="assets/zoo/model-size.png" alt="Summed test loss against model size at 40k, 400k and 4M parameters. Backprop falls from 3.53 to 2.98; DUST stays near 4.8 to 4.9 and 1.5-INP near 5.0 to 5.3; the other rules stay between about 5.4 and 6.8." width="1283" height="568" loading="lazy"></a>
+    <figcaption>Test loss summed over the four tasks against model size, one seed per point; the 40k points are the three-seed means. Lower is better.</figcaption>
+  </figure>
+
+  <h2>What comes next</h2>
+  <p>The honest summary: zero-order rules are competitive on MNIST, behind on CIFAR-10, and still 0.7 to 0.9 bits per character behind backprop on small language models after an hour. The rules that do best are the ones that assign credit locally, per token and per layer, rather than estimating the gradient of every weight at once. Identity-path credit suggests that using the architecture's structure can close the gap faster than adding probes.</p>
+  <p>This is a small-scale benchmark with a one-hour budget, so it does not say what happens after days of training or at billions of parameters. That is exactly why everything is public: the code, the job lists, every run's per-minute history and the editable LaTeX, so anyone can add a rule or a budget and rerun the comparison.</p>
+  <p><a href="https://github.com/Fchaubard/zero_order_optimization_DL_survey/blob/main/paper/zoo_survey_final.pdf">Read the preprint</a> or <a href="https://github.com/Fchaubard/zero_order_optimization_DL_survey">explore zero_order_optimization_DL_survey on GitHub</a>.</p>
+</main>
+<footer>
+  <p><a href="./index.html">Return Home</a></p>
+</footer>
+</body>
+</html>
