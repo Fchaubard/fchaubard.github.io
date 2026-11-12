@@ -318,7 +318,7 @@ US US20180260772A1 (6/1/2016)</a>
 
 <script>
 (() => {
-  // Edit these lists to add videos or update view counts: [id, title, views, series, optional start second].
+  // Edit these lists to add videos or update view counts.
   const sections = [
     {
       heading: "Y Combinator",
@@ -335,8 +335,8 @@ US US20180260772A1 (6/1/2016)</a>
         ["wE1ZgJdt4uM", "Inference, Diffusion, World Models, and More", 144651, "Paper Club"],
         ["DGtUUMNYLcc", "Recursion Is The Next Scaling Law In AI", 20044, "Decoded"],
         ["dC_3ys349bU", "The ML Technique Every Founder Should Know", 38566, "Decoded"],
-        ["-XL2gClQ2gg", "Is AI Now Good Enough To Cure Cancer?", 49992, "Paper Club", 202],
-        ["u-8KpXcPYCw", "10 Habits PhDs Must Unlearn To Build a Startup", 55794, "Startup School", 17]
+        ["-XL2gClQ2gg", "Is AI Now Good Enough To Cure Cancer?", 49992, "Paper Club"],
+        ["u-8KpXcPYCw", "10 Habits PhDs Must Unlearn To Build a Startup", 55794, "Startup School"]
       ]
     },
     {
@@ -361,7 +361,7 @@ US US20180260772A1 (6/1/2016)</a>
     {
       heading: "Cadre AI",
       videos: [
-        ["9E4Is5UE9wg", "What It Actually Takes to Build an AI Company", 277, "Cadre AI", 94]
+        ["9E4Is5UE9wg", "What It Actually Takes to Build an AI Company", 277, "Cadre AI"]
       ]
     }
   ];
@@ -381,10 +381,10 @@ US US20180260772A1 (6/1/2016)</a>
     const grid = document.createElement("div");
     grid.className = "fc-grid";
 
-    videos.sort((a, b) => b[2] - a[2]).forEach(([id, title, views, series, start]) => {
+    videos.sort((a, b) => b[2] - a[2]).forEach(([id, title, views, series]) => {
       const card = document.createElement("a");
       card.className = "fc-card";
-      card.href = "https://www.youtube.com/watch?v=" + id + (start ? "&t=" + start + "s" : "");
+      card.href = "https://www.youtube.com/watch?v=" + id;
       card.target = "_blank";
       card.rel = "noopener noreferrer";
       card.setAttribute("aria-label", title + " (opens YouTube in a new tab)");
